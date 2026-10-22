@@ -1,5 +1,10 @@
 # CISLUNAR 2030 — Viaggio sulla Luna
 
+**🎮 Giocalo subito nel browser (senza installare nulla):**
+<https://amxstudiohub.github.io/viaggio-sulla-luna/>
+
+Il simulatore è statico al 100%: nessun server, nessun account, nessuna dipendenza.
+
 Simulatore 2D di viaggio cislunare in **HTML5 Canvas + moduli ES6 vanilla, zero dipendenze**:
 fisica CR3BP (restrizione circolare dei tre corpi) scalata 1:10, autopilota a fasi,
 discesa e ascesa lunare cinematiche, rientro a rimbalzo atmosferico, radio CapCom con
@@ -19,16 +24,16 @@ Due missioni complete:
 
 ## Avvio
 
-Serve un server HTTP (i moduli ES6 da `file://` vengono bloccati dal browser).
+La via normale è **il sito**: basta un browser moderno (Edge, Chrome, Firefox), niente da installare.
 
-**Windows** — estrai lo zip e doppio clic su **`Avvio_Windows.bat`** (usa Python se presente, altrimenti Node.js): apre `http://localhost:8137`.
-
-**Da terminale, ovunque:**
+In alternativa, dal terminale nella cartella del progetto:
 
 ```bash
 python3 -m http.server 8137      # oppure: node server_node.cjs
 # poi apri http://localhost:8137
 ```
+
+Serve un server HTTP perché i moduli ES6 da `file://` vengono bloccati dal browser. Per Windows esiste un pacchetto pronto (doppio clic su `Avvio_Windows.bat`), nella **Release** più recente: online non serve.
 
 Nessuna libreria da installare: il progetto non ha dipendenze runtime.
 

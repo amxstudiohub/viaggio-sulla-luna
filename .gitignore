@@ -2,6 +2,9 @@
 node_modules/
 package-lock.json
 
+# pacchetto Windows: vive nelle Release, non nel repo
+Viaggio_Sulla_Luna_Windows.zip
+
 # temporanei
 *.log
 *.tmp

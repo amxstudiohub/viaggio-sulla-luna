@@ -2,10 +2,10 @@
  * Generatore asset via ComfyUI remoto (DGX Spark).
  * Uso: node tools/comfy_gen.mjs <nome> <width> <height> <steps> "<prompt>" [flux|qwen]
  * flux = flux1-dev-fp8 (cfg 1.0) | qwen = Qwen Image 2.1 int8 (cfg 4.0)
- * Output: assets/img/<nome>.png — richiede ComfyUI API su http://192.168.0.169:8188
+ * Output: assets/img/<nome>.png — richiede ComfyUI API su http://AI-Station-DGX:8188 (o COMFY_HOST=ip:8188)
  */
 import fs from 'fs';
-const HOST = process.env.COMFY_HOST || '192.168.0.169:8188';
+const HOST = process.env.COMFY_HOST || 'AI-Station-DGX:8188';
 const [nome, w, h, steps, prompt, engine] = process.argv.slice(2);
 if (!nome || !prompt) { console.error('uso: comfy_gen.mjs nome w h steps "prompt" [flux|qwen]'); process.exit(2); }
 const seed = 20300000 + [...nome].reduce((a, c) => a + c.charCodeAt(0) * 7, 0) % 9999;
