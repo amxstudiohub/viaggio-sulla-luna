@@ -14,6 +14,7 @@ description: >
 
 > Ultima verifica: 22-10-2026 — suite verde (smoke 11/11 · integration · autopilot · phase2 · spacex · comms)
 > e flusso CDP completo: Atto 0 → TLI → LOI → discesa cinematica → surface hold → SPAZIO → F8 → rendezvous → TEI → splashdown.
+> **Pubblicato su GitHub Pages: <https://amxstudiohub.github.io/viaggio-sulla-luna/>** (repo pubblico, deploy da workflow, `shots/live_github_pages.png` è la prova).
 > Tutti i numeri qui sono ricontrollati contro il codice, non tramandati.
 
 ## 0. Regole non negoziabili
@@ -38,7 +39,8 @@ description: >
 | `data/comms_lines.js` | COPIONE radio: 57 righe IT/EN + regex di aggancio al messaggio del Director, slot numerici a griglia chiusa, `numToIt`/`numToEn` |
 | `data/comms_manifest.json` + `assets/audio/comms/` | ~206 clip mp3 (mono 24 kHz, ~5 MB, 28 min) + manifest `{f, ms, sha, text}` |
 | `tools/tts_bake.mjs` | bake copione→mp3 (edge-tts `it-IT-DiegoNeural`/`en-US-ChristopherNeural` + ffmpeg loudnorm/trim) |
-| `tools/comms_harvest.mjs` · `comms_check.mjs` · `cdp_comms_verify.mjs` | corpus reale dal browser · verifica copertura · verifica playback headless |
+| `tools/comms_harvest.mjs` · `comms_check.mjs` · `cdp_comms_verify.mjs` | corpus reale dal browser · verifica copertura · verifica playback headless (`--base=` per provare il sito pubblico) |
+| `.github/workflows/pages.yml` | deploy GitHub Pages: copia in `_site` SOLO il runtime (index, main.js, core, systems, ui, styles, data, assets) e usa `actions/deploy-pages`. Il resto del repo (shots, test, tool, docx) non viene pubblicato. |
 | `ui/hud.js`, `styles/` | HUD testuale, CSS |
 | `assets/`, `assets/img/` | cover, texture regolite/lunar_tactical, sprite lander/rocket/pad/fumo (con varianti _key per chroma) |
 | `tests/` | smoke.mjs · integration.mjs · autopilot.test.mjs · phase2.test.mjs · spacex.test.mjs |
@@ -80,6 +82,7 @@ node tools/tts_bake.mjs         # ribake idempotente (solo le righe il cui testo
 node tools/comms_harvest.mjs    # rigenera data/comms_corpus.json (serve server 8137 + chrome)
 node tools/cdp_comms_verify.mjs # browser: clip in onda, stop, ENG, zero speechSynthesis
 node tools/cdp_tts_probe.mjs    # missione intera headless: 0 messaggi non baked, 0 speak()
+node tools/cdp_comms_verify.mjs --base=https://amxstudiohub.github.io/viaggio-sulla-luna  # prova il sito live
 ```
 Dopo modifiche a physics/autopilot/descent lanciare TUTTA la suite; per UI/cockpit basta CDP + node --check.
 
@@ -91,7 +94,7 @@ Dopo modifiche a physics/autopilot/descent lanciare TUTTA la suite; per UI/cockp
 - Orizzonte laterale cinematica: feetY = H/2+140 (piedi sprite), fascia regolite scaleY 0.42.
 - Luna procedurale: cache offscreen per bucket 3 px, PRNG seedato (niente flicker).
 - Moduli ES6 da file:// bloccati: su Windows serve il .bat (Python/py/Node fallback).
-- Voce radio: lo schermo mostra il testo del Director, la radio legge il copione (`data/comms_lines.js`): sono DUE testi diversi. Cambiare una riga del copione senza `node tools/tts_bake.mjs` lascia la clip vecchia (`comms_check` lo segnala come "testo cambiato").
+- Token fine-grained per i push: servono **Contents**, **Administration**, **Pages** e **Workflows** (Read and write). Senza Workflows il push di un file sotto `.github/workflows/` viene rifiutato con 403 anche se i contenuti sono scrivibili. Cambiare una riga del copione senza `node tools/tts_bake.mjs` lascia la clip vecchia (`comms_check` lo segnala come "testo cambiato").
 - **`speechSynthesis` è disattivata di default** (`AudioComms.allowTTS=false`): il fallback sulla voce del browser era il modo più sicuro di sentire una seconda voce sovrapposta alla radio. Si riaccende solo per diagnostica con `index.html?tts=1`. Un messaggio senza clip fa sentire i soli toni + `sim.log('RADIO: ...','warn')`. Verifica con `node tools/cdp_tts_probe.mjs` (0 chiamate a speak, 0 messaggi non baked).
 - Le `re` del copione girano sul testo NORMALIZZATO (minuscolo, accenti spogliati, punteggiatura→spazio): niente apostrofi né parentesi nelle regex, e vanno tenute non ambigue (test 4 di comms.test). Il testo `it:`/`en:` del copione invece va scritto in italiano CORRETTO (accenti e apostrofi veri: "l'orbita", "velocità", "è", mai "spegnuto" → "spento"): edge-tts pronuncia meglio e il manifest è l'unico testo verificabile.
 - Slot numerici = griglia chiusa min/max/step: il valore viene arrotondato e cappato, quindi la clip esiste sempre; se il regex dello slot non matcha, la riga viene letta senza numero.

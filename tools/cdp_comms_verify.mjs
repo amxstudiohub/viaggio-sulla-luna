@@ -14,8 +14,12 @@
 import fs from 'fs';
 import { spawn } from 'child_process';
 const PORT = 9381;
+const A = process.argv.slice(2);
+const flag = (n, d) => { const a = A.find(x => x.startsWith('--' + n + '=')); return a ? a.split('=').slice(1).join('=') : d; };
+const BASE = flag('base', 'http://127.0.0.1:8137');
+const PROF = flag('profile', '/tmp/chrome-prof-comms-verify');
 const chrome = spawn('google-chrome', ['--headless=new', '--no-sandbox', '--disable-gpu',
-  '--autoplay-policy=no-user-gesture-required', '--user-data-dir=/tmp/chrome-prof-comms-verify',
+  '--autoplay-policy=no-user-gesture-required', '--user-data-dir=' + PROF,
   '--remote-debugging-port=' + PORT, '--window-size=1600,900', 'about:blank'], { stdio: 'ignore' });
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 async function getJson(url) { for (let i = 0; i < 80; i++) { try { return await (await fetch(url)).json(); } catch { await wait(500); } } throw new Error('chrome non risponde'); }
@@ -31,7 +35,7 @@ const cmd = (method, params = {}) => raw({ method, params, sessionId });
 await cmd('Runtime.enable'); await cmd('Page.enable'); await cmd('Log.enable').catch(() => {});
 // contatore delle chiamate TTS: la radio a clip non deve mai usarle
 await cmd('Page.addScriptToEvaluateOnNewDocument', { source: "window.__speakCalls = []; try { var ss = window.speechSynthesis; var sp = ss.speak.bind(ss); ss.speak = function (u) { window.__speakCalls.push(String(u.text).slice(0, 60)); return sp(u); }; } catch (e) { window.__speakCalls.push('patch fallita'); }" });
-await cmd('Page.navigate', { url: 'http://127.0.0.1:8137/?mission=cnsa&auto=1' });
+await cmd('Page.navigate', { url: BASE + '/?mission=cnsa&auto=1' });
 const ev = async (expr) => {
   const r = await cmd('Runtime.evaluate', { expression: expr, returnByValue: true });
   if (r.result && r.result.exceptionDetails) errs.push(String(r.result.exceptionDetails.exception && r.result.exceptionDetails.exception.description || r.result.exceptionDetails.text).slice(0, 160));
