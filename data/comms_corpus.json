@@ -1,0 +1,235 @@
+{
+ "when": "2026-10-22T22:05:26.525Z",
+ "missions": "CNSA,SPACEX",
+ "n": 57,
+ "entries": [
+  {
+   "phase": "ANOMALIA",
+   "text": "FAULT: Raptor numero 2 OFFLINE — spinta ridotta del 50%. Il PID compensa l'assetto: la frenata principale è già completata, l'allunaggio prosegue."
+  },
+  {
+   "phase": "ANOMALIA",
+   "text": "FAULT: YF-36 numero 2 OFFLINE — logica diagonale: si spegne anche il diagonale opposto (spinta 50%). Il PID compensa: la frenata principale è già completata, la spinta residua basta per l'approdo finale. L'allunaggio prosegue."
+  },
+  {
+   "phase": "F1 PIANIFICAZIONE",
+   "text": "FASE 1 — LEO e pianificazione: risolvo la finestra di intercetta con la Luna IN MOVIMENTO simulando il BURN FINITO (perdite di gravità incluse). Un'accelerazione PROGRADE allunga l'apogeo fino alla Sfera d'Influenza lunare: è un'orbita di trasferimento di Hohmann scalata."
+  },
+  {
+   "phase": "F1 PIANIFICAZIONE",
+   "text": "Piano calcolato: accensione T+X tra 0.4 h, Δv 1050 m/s prograde (burn ~412 s). Allineamento prograde in corso: i motori YF-58-1 puntano lungo il vettore velocità."
+  },
+  {
+   "phase": "F1 PIANIFICAZIONE",
+   "text": "Piano calcolato: accensione T+X tra 0.5 h, Δv 1050 m/s prograde (burn ~99 s). Allineamento prograde in corso: i motori 6x Raptor (3 SL + 3 RVac) puntano lungo il vettore velocità."
+  },
+  {
+   "phase": "F10 COMPLETATA",
+   "text": "Corridoio di rientro agganciato: perigeo 1 km dopo 2 impulsi di correzione. Buena suerte."
+  },
+  {
+   "phase": "F10 INIEZIONE TERRA",
+   "text": "FASE 10 — Trans-Earth Injection: sgancio l'orbiter e risolvo il corridoio di rientro. Un ingresso troppo ripido (-25°) ci farò impattare nell'oceano a 11 km/s: il corridoio dolce (|γ| < 7°) è largo pochi km — lo cerco con una griglia di burn finiti, poi lo rifinirò con impulsi di correzione a metà crociera (come le missioni vere)."
+  },
+  {
+   "phase": "F10",
+   "text": "ACCENSIONE TEI: 4x YF-36 prograde — sfuggiamo alla gravità lunare verso la Terra."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.1: perigeo -0 km -> impulso di 0.29 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.2: perigeo 1 km -> impulso di 0.24 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Corridoio TEI trovato: Δv 403.53 m/s tra 0.3 h, ingresso a γ -7.2° (finestra radente: rimbalzerò sull'atmosfera)."
+  },
+  {
+   "phase": "F10",
+   "text": "Nessuna finestra TEI in questa epoca (l'angolo di ingresso sarebbe troppo ripido). Coast in orbita lunare: riscansione tra 3 ore, la geometria Terra-Luna è periodica."
+  },
+  {
+   "phase": "F10",
+   "text": "TEI completata. Tra 3 ore di crociera valuterò la traiettoria coll'imbarcazione reale e correggerò il perigeo con micro-impulsi."
+  },
+  {
+   "phase": "F11 RIENTRO SKIP",
+   "text": "FASE 11 — RIENTRO SKIP: all'interfaccia atmosferica (100 km reali = 10 km scalati) orienterò la capsula con portanza verso l'alto (bank 1) sotto gli 8 km: la capsula SBANDERÀ sull'atmosfera come un sasso piatto, dissipando energia a ogni rimbalzo senza superare i 6 g d'equipaggio. Poi paracadute e ammaraggio."
+  },
+  {
+   "phase": "F11",
+   "text": "INTERFACCIA ATMOSFERICA: v = 3508 m/s. Bank 1: presento lo scudo con portanza — punto a RIMBALZARE fuori (skip)."
+  },
+  {
+   "phase": "F11",
+   "text": "PARACADUTE aperti: frenamento finale verso l'ammaraggio."
+  },
+  {
+   "phase": "F11",
+   "text": "SKIP RIUSCITO ✔ Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. G max finora 4.8."
+  },
+  {
+   "phase": "F2 ACCENSIONE TLI",
+   "text": "FASE 2 — ACCENSIONE TLI: 6x Raptor (3 SL + 3 RVac), spinta 14358.0 kN, Isp 355 s. Consumo ~4124.2 kg/s secondo l'equazione di Tsiolkovsky. Osserva l'apogeo allungarsi verso la Luna."
+  },
+  {
+   "phase": "F2 ACCENSIONE TLI",
+   "text": "FASE 2 — ACCENSIONE TLI: YF-58-1, spinta 78.5 kN, Isp 315 s. Consumo ~25.4 kg/s secondo l'equazione di Tsiolkovsky. Osserva l'apogeo allungarsi verso la Luna."
+  },
+  {
+   "phase": "F2 COMPLETATA",
+   "text": "MECO — motore spento: Δv effettivo 1050 m/s (piano impulsivo 1050 + perdite di gravità) consumando 8.9 t di propellente (massa ora 21.9 t). La previsione tratteggiata conferma il trasferimento Terra→Luna."
+  },
+  {
+   "phase": "F2 COMPLETATA",
+   "text": "MECO — motore spento: Δv effettivo 1053 m/s (piano impulsivo 1050 + perdite di gravità) consumando 352.2 t di propellente (massa ora 997.5 t). La previsione tratteggiata conferma il trasferimento Terra→Luna."
+  },
+  {
+   "phase": "F2",
+   "text": "TLI in corso: Δv 394 m/s bruciati, propellente 86%. Le perdite di gravità del burn finito richiedono più del Δv impulsivo pianificato: continuo finché la previsione non mostra la SOI."
+  },
+  {
+   "phase": "F2",
+   "text": "TLI in corso: Δv 394 m/s bruciati, propellente 88%. Le perdite di gravità del burn finito richiedono più del Δv impulsivo pianificato: continuo finché la previsione non mostra la SOI."
+  },
+  {
+   "phase": "F2",
+   "text": "TLI in corso: Δv 788 m/s bruciati, propellente 73%. Le perdite di gravità del burn finito richiedono più del Δv impulsivo pianificato: continuo finché la previsione non mostra la SOI."
+  },
+  {
+   "phase": "F2",
+   "text": "TLI in corso: Δv 789 m/s bruciati, propellente 77%. Le perdite di gravità del burn finito richiedono più del Δv impulsivo pianificato: continuo finché la previsione non mostra la SOI."
+  },
+  {
+   "phase": "F3 CROCIERA",
+   "text": "FASE 3 — Crociera cislunare: SMART WARP attivo, salgo fino a 5000x (1 s reale = 83 min simulati) così l'attraversamento dura ~6 secondi reali. Ridurrò automaticamente il warp avvicinandoci alla Luna per guidare la frenata."
+  },
+  {
+   "phase": "F3",
+   "text": "Riduco il warp a 100x: siamo a 7884 km dalla Luna, serve risoluzione fine per la manovra di inserzione."
+  },
+  {
+   "phase": "F3",
+   "text": "Riduco il warp a 100x: siamo a 7891 km dalla Luna, serve risoluzione fine per la manovra di inserzione."
+  },
+  {
+   "phase": "F4 COMPLETATA",
+   "text": "Spegnimento LOI: velocità ridotta a 140 m/s (circolare a questa quota: 138 m/s). Orbita LUNARE STABILITA — Ap 3216 km, Pe 1704 km, e=0.287. L'energia specifica è ora negativa: siamo in orbita chiusa."
+  },
+  {
+   "phase": "F4 COMPLETATA",
+   "text": "Spegnimento LOI: velocità ridotta a 284 m/s (circolare a questa quota: 278 m/s). Orbita LUNARE STABILITA — Ap 732 km, Pe 234 km, e=0.379. L'energia specifica è ora negativa: siamo in orbita chiusa."
+  },
+  {
+   "phase": "F4 INSERZIONE LUNARE",
+   "text": "FASE 4 — ACCENSIONE LOI (Lunar Orbit Insertion): 6x Raptor (3 SL + 3 RVac) in retrogrado. Dobbiamo sottrarre ~606 m/s di velocità selenocentrica: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  {
+   "phase": "F4 INSERZIONE LUNARE",
+   "text": "FASE 4 — ACCENSIONE LOI (Lunar Orbit Insertion): YF-58-1 in retrogrado. Dobbiamo sottrarre ~348 m/s di velocità selenocentrica: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  {
+   "phase": "F4 SOI LUNARE",
+   "text": "FASE 4 — INGRESSO NELLA SOI LUNARE (raggio 6580 km): da qui il campo gravitazionale SELENOCENTRICO domina la traiettoria e passo al frame lunare. Mi allineo RETROGRADO: la traiettoria è iperbolica (e=27.16), senza frenata sfrecceremmo oltre. La frenata avverrà al periapside: è il punto più efficiente per il costo in Δv (effetto Oberth)."
+  },
+  {
+   "phase": "F4 SOI LUNARE",
+   "text": "FASE 4 — INGRESSO NELLA SOI LUNARE (raggio 6580 km): da qui il campo gravitazionale SELENOCENTRICO domina la traiettoria e passo al frame lunare. Mi allineo RETROGRADO: la traiettoria è iperbolica (e=4.02), senza frenata sfrecceremmo oltre. La frenata avverrà al periapside: è il punto più efficiente per il costo in Δv (effetto Oberth)."
+  },
+  {
+   "phase": "F5 SEPARAZIONE PM",
+   "text": "FASE 5 — Separazione Modulo Propulsione (crasher): il LM passa ai 4× YF-36 (Δv residuo 0.7 km/s). Il PM esaurito esegue la deorbit e impatterà la Luna in punto controllato — firma dell'architettura CNSA. Warp 1000x per l'impatto."
+  },
+  {
+   "phase": "F5",
+   "text": "Impatto del Modulo Propulsione confermato (crash deliberato ✓). Il LM (10.8 t di propellente, Δv 4.0 km/s) è pronto per la discesa sulla Luna."
+  },
+  {
+   "phase": "F6 DEORBITAZIONE",
+   "text": "FASE 6 — Deorbitazione: accensione RETROGRADA per abbassare il perilune a ~25 km sopra la superficie. Sceglierò il sito di atterraggio con lo scanner LiDAR quando scenderemo sotto i 25 km (VISTA TATTICA)."
+  },
+  {
+   "phase": "F6",
+   "text": "Deorbit completata: perilune 16 km. In caduta verso il punto di inserzione: all'ultimo passaggio a ~16 km frenerò a 250 m/s (PDIT)."
+  },
+  {
+   "phase": "F6",
+   "text": "Deorbit completata: perilune 17 km. In caduta verso il punto di inserzione: all'ultimo passaggio a ~16 km frenerò a 250 m/s (PDIT)."
+  },
+  {
+   "phase": "F6",
+   "text": "Perilune: PDIT — Powered Descent Initiation, frenata a 160 m/s poi guida PID al sito."
+  },
+  {
+   "phase": "F6",
+   "text": "Sotto i 25 km: VISTA TATTICA attiva — terreno procedurale (crateri, massi), cono LiDAR e zona di atterraggio colorata per pendenza."
+  },
+  {
+   "phase": "F7 COMPLETATA",
+   "text": "Superficie lunare raggiunta. Il lander è stabile sulla regolite. Premi barra spaziatrice quando vuoi decollare."
+  },
+  {
+   "phase": "F7 COMPLETATA",
+   "text": "TOUCHDOWN ✔ Velocità verticale sotto i 3 m/s, pendenza del sito entro i 3°. Allunaggio completato: propellente LM residuo 3.68 t. Preparo l'ascesa."
+  },
+  {
+   "phase": "F7 DISCESA TATTICA",
+   "text": "FASE 7 — DISCESA POTUTA (Powered Descent Guidance): LiDAR completato — sito a pendenza 2.8° (< 3° richiesto) a 382 km di selenongsitudine. I 4× YF-36 in PID: pendio di discesa ~20°, velocità al suolo < 3 m/s. Sotto i 25 km la Vista Tattica mostra crateri, massi e la zona verde di atterraggio."
+  },
+  {
+   "phase": "F7 DISCESA TATTICA",
+   "text": "FASE 7 — DISCESA POTUTA (Powered Descent Guidance): LiDAR completato — sito a pendenza 4.3° (< 3° richiesto) a 205 km di selenongsitudine. I 4× YF-36 in PID: pendio di discesa ~20°, velocità al suolo < 3 m/s. Sotto i 25 km la Vista Tattica mostra crateri, massi e la zona verde di atterraggio."
+  },
+  {
+   "phase": "F8 RISALITA LUNARE",
+   "text": "FASE 8 — ASCESA: i 4× YF-36 accendono dal suolo: spinta/gravità ~2.5, salita verticale poi pitch-over verso l'orbita a 20 km. Mengzhou ci attende in orbita bassa lunare."
+  },
+  {
+   "phase": "F8",
+   "text": "LIFTOFF ✔ Siamo saliti dal suolo: pitch-over verso l'orbita di rendezvous (20 km)."
+  },
+  {
+   "phase": "F9 COMPLETATA",
+   "text": "DOCKED ✔ AGGANCIO COMPLETATO con Mengzhou: equipaggio trasferito. Propellente LM residuo 1.07 t — sufficiente per la TEI."
+  },
+  {
+   "phase": "F9 RENDEZVOUS",
+   "text": "FASE 9 — RENDEZVOUS con Mengzhou: prima allineo quota e velocità circolare (MATCH), poi impulso di FASE ORBITALE (±10 m/s: alzo l'orbita se sono avanti, l'abbasso se sono indietro — la deriva chiude il gap), controimpulso e chiusura finale con molla d'aggancio (legge di Hill/Clohessy-Wiltshire). Aggancio sotto i 2 km e 30 m/s di velocità relativa."
+  },
+  {
+   "phase": "F9",
+   "text": "Chiusura finale: molla CW, velocità relativa < 1 m/s..."
+  },
+  {
+   "phase": "F9",
+   "text": "Controimpulso: ricircolarizzo sull'orbita di Mengzhou..."
+  },
+  {
+   "phase": "F9",
+   "text": "Deriva di chiusura: aspetto che il gap si riduca sotto i 10 km..."
+  },
+  {
+   "phase": "F9",
+   "text": "Impulso di fase: accensione per creare la deriva di chiusura..."
+  },
+  {
+   "phase": "F9",
+   "text": "Rendezvous: allineo quota/velocità con l'orbita di Mengzhou..."
+  },
+  {
+   "phase": "MISSIONE COMPLETATA",
+   "text": "AMMARAGGIO ✔ La capsula ha completato il treno di rimbalzi atmosferici, dissipato l'energia di ritorno (picco 4.8 g, limite 6 g) e ammarinato in sicurezza. Missione completa: dalla LEO alla superficie lunare e ritorno. Premi V per il comando manuale, 0 per ripetere la demo."
+  },
+  {
+   "phase": "SISTEMA",
+   "text": "AUTOPILOTA GNC ONLINE. Valuto la geometria di missione corrente..."
+  },
+  {
+   "phase": "SISTEMA",
+   "text": "Manutenzione a terra completata: la coppia diagonale YF-36 è di nuovo ONLINE (riprogrammata dal computer di bordo)."
+  }
+ ]
+}

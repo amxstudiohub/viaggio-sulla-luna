@@ -1,0 +1,7 @@
+{
+  "name": "cislunar-2030",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CISLUNAR 2030 - Simulatore lunare 2D dual-architecture (HTML5 Canvas, ES6 modules, zero dipendenze)"
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CISLUNAR 2030 — Simulatore Lunare Dual-Architecture</title>
+  <link rel="stylesheet" href="styles/cockpit.css" />
+</head>
+<body>
+  <!-- Filtro distorsione termica per l'Atto 0 (heat haze) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="heat-haze" x="-15%" y="-15%" width="130%" height="130%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.006 0.018" numOctaves="2" seed="7" result="noise">
+          <animate attributeName="baseFrequency" dur="2.6s" values="0.006 0.018;0.012 0.03;0.006 0.018" repeatCount="indefinite"/>
+        </feTurbulence>
+        <feDisplacementMap id="heat-disp" in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+  <canvas id="view"></canvas>
+
+  <!-- ============ HUD ============ -->
+  <div id="hud" style="display:none">
+    <header class="panel topbar">
+      <span id="mission" class="brand">CISLUNAR 2030</span>
+      <span class="kv">MET <b id="met" class="val">00:00:00</b></span>
+      <span class="kv">WARP <b id="warp" class="val">1x</b></span>
+      <span class="kv">STATUS <b id="status" class="val ok">NOMINAL</b></span>
+      <button id="autopilot-btn" class="ap-btn" tabindex="-1" title="Attiva/disattiva (tasto V)">&#9678; AUTOPILOT</button>
+      <button id="warp-down-btn" class="ap-btn" tabindex="-1" title="Rallenta la missione (Pag Giù)">&#9664;&#9664;</button>
+      <button id="warp-up-btn" class="ap-btn" tabindex="-1" title="Accelera la missione (Pag Su)">&#9654;&#9654;</button>
+      <button id="radio-btn" class="ap-btn radio" tabindex="-1" title="Ciclo lingua radio: ITA / ENG / MUTE (tasto L)">&#128266; RADIO: ITA</button>
+    </header>
+
+    <nav id="timeline" class="timeline" style="display:none" title="Clicca una fase per saltarci (Spazio/N = fase successiva)"></nav>
+
+    <section class="panel left">
+      <h2>ORBITA</h2>
+      <div class="row"><span>Corpo</span><b id="body" class="val">—</b></div>
+      <div class="row"><span>Quota</span><b id="alt" class="val">—</b></div>
+      <div class="row"><span>Velocità</span><b id="vel" class="val">—</b></div>
+      <div class="row"><span>Apoasse</span><b id="ap" class="val hl">—</b></div>
+      <div class="row"><span>Periasse</span><b id="pe" class="val hl">—</b></div>
+      <div class="row"><span>Eccentricità</span><b id="ecc" class="val">—</b></div>
+      <div class="row"><span>Semiasse</span><b id="sma" class="val">—</b></div>
+      <h2>CISLUNARE</h2>
+      <div class="row"><span>Distanza Luna</span><b id="moon-dist" class="val amber">—</b></div>
+      <div class="row"><span>Regime</span><b id="soi" class="val">—</b></div>
+      <h2>DISCESA / SALITA</h2>
+      <div class="row"><span>Vel. verticale</span><b id="vs" class="val">—</b></div>
+      <div class="row"><span>Quota terreno</span><b id="terrain" class="val">—</b></div>
+      <div class="row"><span>Carico G</span><b id="gload" class="val">—</b></div>
+    </section>
+
+    <section class="panel right">
+      <h2>PROPULSIONE</h2>
+      <div class="row"><span>Motori</span><b id="engine" class="val">—</b></div>
+      <div class="row"><span>Quad YF-36</span><b id="fault" class="val good">4/4 OK</b></div>
+      <div class="row"><span>Throttle</span><b id="throttle-pct" class="val">0 %</b></div>
+      <div class="bar"><div id="throttle-bar"></div></div>
+      <div class="row"><span>Propellente</span><b id="prop-pct" class="val">100 %</b></div>
+      <div class="bar prop"><div id="prop-bar"></div></div>
+      <div class="row"><span>Δv attivo</span><b id="dv-active" class="val cyan">—</b></div>
+      <div class="row"><span>Δv totale</span><b id="dv-total" class="val cyan">—</b></div>
+      <div class="row"><span>Massa</span><b id="mass" class="val">—</b></div>
+    </section>
+
+    <footer class="panel bottom">
+      <div id="node-info" class="node-info">PRED: —</div>
+      <div id="help" class="help">
+        <b>W/S</b> throttle · <b>A/D</b> rotazione · <b>P/R</b> pro/retro-hold · <b>,/.</b> warp · <b>Pag±</b> warp (anche in autopilota) ·
+        <b>X</b> staging · <b>M</b> node · <b>[ ]</b> Δv node · <b>Enter</b> commit · <b>C</b> cut ·
+        <b>V</b> autopilot · <b>F</b> guasto YF-36 · <b>L</b> radio ITA/ENG/MUTE · <b>K</b> vista cinema · <b>Spazio/N</b> salta fase · <b>1/2/3</b> camera · rotella zoom · <b>0</b> reset
+      </div>
+    </footer>
+
+    <section id="director" class="panel director" style="display:none">
+      <div class="dir-head"><span class="dir-dot"></span>MISSION DIRECTOR — <b id="dir-phase">STANDBY</b></div>
+      <div id="dir-text">In attesa di selezione missione…</div>
+    </section>
+
+    <aside class="panel ticker-panel"><div id="ticker"></div></aside>
+    <div id="banner" class="banner" style="display:none"></div>
+  </div>
+
+  <!-- ============ VISTA CINEMATOGRAFICA ALLUNAGGIO (sotto i 25 km) ============ -->
+  <div id="cinematic-viewport" style="display:none">
+    <div id="cine-bg"></div>
+    <img id="cine-pad" alt="" draggable="false" style="display:none" />
+    <img id="cine-booster" alt="" draggable="false" style="display:none" />
+    <img id="cine-stage2" alt="" draggable="false" style="display:none" />
+    <img id="cine-smoke" alt="" draggable="false" style="display:none" />
+    <img id="cine-lander" alt="" draggable="false" />
+    <canvas id="cine-overlay"></canvas>
+    <div id="cine-vignette"></div>
+    <button id="cine-exit" title="Attiva/disattiva la vista cinema (tasto K)">&#127909; VISTA CINEMA: ON</button>
+  </div>
+
+  <!-- ============ SELETTORE MISSIONE ============ -->
+  <div id="selector">
+    <h1>CISLUNAR <span>2030</span></h1>
+    <p class="sub">Simulatore orbitale 2D · mondo Terra–Luna scalato 1:10 · seleziona architettura di missione</p>
+    <label id="act0-toggle" title="Mostra la cinematica di lancio verticale prima dell'orbita">
+      <input type="checkbox" id="act0-check" checked /> &#128640; Atto 0 &mdash; Lancio verticale (T-0 &rarr; LEO)
+    </label>
+    <div id="cards"></div>
+    <div id="credits">by <b>AMXSTUDIO</b> &copy; 2025 &mdash; CISLUNAR 2030</div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

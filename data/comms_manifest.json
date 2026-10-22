@@ -1,0 +1,1246 @@
+{
+ "version": 1,
+ "engine": "edge",
+ "voices": {
+  "it": "it-IT-DiegoNeural",
+  "en": "en-US-ChristopherNeural"
+ },
+ "clips": {
+  "it.f2_meco@1600": {
+   "f": "assets/audio/comms/it_f2_meco_1600.mp3",
+   "ms": 11352,
+   "sha": "1f17560714d0",
+   "text": "Meco, motore spento. Delta v effettivo milleseicento metri al secondo, incluse le perdite di gravità. La previsione conferma il trasferimento verso la Luna."
+  },
+  "it.f2_meco@1800": {
+   "f": "assets/audio/comms/it_f2_meco_1800.mp3",
+   "ms": 11400,
+   "sha": "c0365bc46118",
+   "text": "Meco, motore spento. Delta v effettivo milleottocento metri al secondo, incluse le perdite di gravità. La previsione conferma il trasferimento verso la Luna."
+  },
+  "it.f2_meco@2000": {
+   "f": "assets/audio/comms/it_f2_meco_2000.mp3",
+   "ms": 11040,
+   "sha": "2e6ccadf3a71",
+   "text": "Meco, motore spento. Delta v effettivo duemila metri al secondo, incluse le perdite di gravità. La previsione conferma il trasferimento verso la Luna."
+  },
+  "it.f2_meco@2200": {
+   "f": "assets/audio/comms/it_f2_meco_2200.mp3",
+   "ms": 11496,
+   "sha": "970610b88f0c",
+   "text": "Meco, motore spento. Delta v effettivo duemiladuecento metri al secondo, incluse le perdite di gravità. La previsione conferma il trasferimento verso la Luna."
+  },
+  "it.f2_meco@2400": {
+   "f": "assets/audio/comms/it_f2_meco_2400.mp3",
+   "ms": 11712,
+   "sha": "93491659b9c6",
+   "text": "Meco, motore spento. Delta v effettivo duemilaquattrocento metri al secondo, incluse le perdite di gravità. La previsione conferma il trasferimento verso la Luna."
+  },
+  "it.f2_meco@2600": {
+   "f": "assets/audio/comms/it_f2_meco_2600.mp3",
+   "ms": 11544,
+   "sha": "01efefa261a0",
+   "text": "Meco, motore spento. Delta v effettivo duemilaseicento metri al secondo, incluse le perdite di gravità. La previsione conferma il trasferimento verso la Luna."
+  },
+  "it.f2_meco@2800": {
+   "f": "assets/audio/comms/it_f2_meco_2800.mp3",
+   "ms": 11616,
+   "sha": "03c2349ca3af",
+   "text": "Meco, motore spento. Delta v effettivo duemilaottocento metri al secondo, incluse le perdite di gravità. La previsione conferma il trasferimento verso la Luna."
+  },
+  "it.sys_online": {
+   "f": "assets/audio/comms/it_sys_online.mp3",
+   "ms": 5232,
+   "sha": "bda0a36bc7dd",
+   "text": "Autopilota GNC online. Sto valutando la geometria di missione corrente."
+  },
+  "en.sys_online": {
+   "f": "assets/audio/comms/en_sys_online.mp3",
+   "ms": 4560,
+   "sha": "a2701a519e41",
+   "text": "Guidance autopilot online. Evaluating the current mission geometry."
+  },
+  "it.sys_disengage": {
+   "f": "assets/audio/comms/it_sys_disengage.mp3",
+   "ms": 4392,
+   "sha": "451aa0290616",
+   "text": "Autopilota disinnestato. Ripristinato il comando manuale."
+  },
+  "en.sys_disengage": {
+   "f": "assets/audio/comms/en_sys_disengage.mp3",
+   "ms": 3768,
+   "sha": "0f38506daaa9",
+   "text": "Autopilot disengaged. Manual control restored."
+  },
+  "it.sys_repair": {
+   "f": "assets/audio/comms/it_sys_repair.mp3",
+   "ms": 7200,
+   "sha": "7a03d513e46d",
+   "text": "Manutenzione completata. La coppia diagonale di motori è di nuovo online, riprogrammata dal computer di bordo."
+  },
+  "en.sys_repair": {
+   "f": "assets/audio/comms/en_sys_repair.mp3",
+   "ms": 6264,
+   "sha": "9c7f0ed5c810",
+   "text": "Maintenance complete. The diagonal engine pair is back online, reprogrammed by the onboard computer."
+  },
+  "it.at0_pad_go": {
+   "f": "assets/audio/comms/it_at0_pad_go.mp3",
+   "ms": 5856,
+   "sha": "cfa85942e208",
+   "text": "Torre aperta, meteo verde. Sequenza automatica avviata: T meno dieci."
+  },
+  "en.at0_pad_go": {
+   "f": "assets/audio/comms/en_at0_pad_go.mp3",
+   "ms": 5352,
+   "sha": "71d8ecdbe96e",
+   "text": "Tower open, weather green. Automatic sequence started: T minus ten."
+  },
+  "it.at0_t4": {
+   "f": "assets/audio/comms/it_at0_t4.mp3",
+   "ms": 2928,
+   "sha": "33428ca6f8a4",
+   "text": "Quattro, tre, due, uno."
+  },
+  "en.at0_t4": {
+   "f": "assets/audio/comms/en_at0_t4.mp3",
+   "ms": 2256,
+   "sha": "ee644678af7d",
+   "text": "Four, three, two, one."
+  },
+  "it.at0_ignition": {
+   "f": "assets/audio/comms/it_at0_ignition.mp3",
+   "ms": 3384,
+   "sha": "0d56db0f24ab",
+   "text": "Accensione. Spinta al cento percento."
+  },
+  "en.at0_ignition": {
+   "f": "assets/audio/comms/en_at0_ignition.mp3",
+   "ms": 3000,
+   "sha": "875bd9d716da",
+   "text": "Ignition. Thrust at one hundred percent."
+  },
+  "it.at0_lift": {
+   "f": "assets/audio/comms/it_at0_lift.mp3",
+   "ms": 5256,
+   "sha": "fd656855304c",
+   "text": "Il razzo lascia la rampa. Velocità verticale nominale, torre libera."
+  },
+  "en.at0_lift": {
+   "f": "assets/audio/comms/en_at0_lift.mp3",
+   "ms": 4680,
+   "sha": "05785f12f005",
+   "text": "The vehicle has left the pad. Vertical speed nominal, tower clear."
+  },
+  "it.at0_maxq": {
+   "f": "assets/audio/comms/it_at0_maxq.mp3",
+   "ms": 4008,
+   "sha": "05f2612d5cfe",
+   "text": "Max Q. Pressione dinamica al picco, motore all'ottanta percento."
+  },
+  "en.at0_maxq": {
+   "f": "assets/audio/comms/en_at0_maxq.mp3",
+   "ms": 3672,
+   "sha": "bfe6ccbe2d21",
+   "text": "Max Q. Peak dynamic pressure, engine at eighty percent."
+  },
+  "it.at0_meco": {
+   "f": "assets/audio/comms/it_at0_meco.mp3",
+   "ms": 3480,
+   "sha": "4dac484222bd",
+   "text": "Spegnimento motori del primo stadio. Meco."
+  },
+  "en.at0_meco": {
+   "f": "assets/audio/comms/en_at0_meco.mp3",
+   "ms": 3024,
+   "sha": "e0b49338fff8",
+   "text": "First stage engine cutoff. Meco."
+  },
+  "it.at0_stage": {
+   "f": "assets/audio/comms/it_at0_stage.mp3",
+   "ms": 3840,
+   "sha": "34679a52073c",
+   "text": "Separazione confermata. Il booster si allontana."
+  },
+  "en.at0_stage": {
+   "f": "assets/audio/comms/en_at0_stage.mp3",
+   "ms": 3744,
+   "sha": "4547c3464f6c",
+   "text": "Separation confirmed. The booster is falling away."
+  },
+  "it.at0_ses": {
+   "f": "assets/audio/comms/it_at0_ses.mp3",
+   "ms": 3912,
+   "sha": "2d20a43cd594",
+   "text": "Accensione del secondo stadio. Via verso l'orbita."
+  },
+  "en.at0_ses": {
+   "f": "assets/audio/comms/en_at0_ses.mp3",
+   "ms": 3288,
+   "sha": "1722a4147244",
+   "text": "Second stage ignition. On the way to orbit."
+  },
+  "it.at0_seco": {
+   "f": "assets/audio/comms/it_at0_seco.mp3",
+   "ms": 5688,
+   "sha": "d8e268d0ae93",
+   "text": "Seconda accensione completata. Iniezione orbitale raggiunta: benvenuti in LEO."
+  },
+  "en.at0_seco": {
+   "f": "assets/audio/comms/en_at0_seco.mp3",
+   "ms": 5424,
+   "sha": "56e92dbeb1a2",
+   "text": "Second burn complete. Orbital insertion achieved: welcome to low Earth orbit."
+  },
+  "it.at1_leo": {
+   "f": "assets/audio/comms/it_at1_leo.mp3",
+   "ms": 4656,
+   "sha": "2cdb09f4bc7b",
+   "text": "Orbita terrestre bassa raggiunta. Da qui in poi, la missione."
+  },
+  "en.at1_leo": {
+   "f": "assets/audio/comms/en_at1_leo.mp3",
+   "ms": 3960,
+   "sha": "a923a7194f00",
+   "text": "Low Earth orbit achieved. From here on, the mission."
+  },
+  "it.f1_piano": {
+   "f": "assets/audio/comms/it_f1_piano.mp3",
+   "ms": 10440,
+   "sha": "829d6c84f4bd",
+   "text": "Fase uno: LEO e pianificazione. Risolvo la finestra di intercetta con la Luna in movimento, simulando l'accensione a burn finito, perdite di gravità incluse."
+  },
+  "en.f1_piano": {
+   "f": "assets/audio/comms/en_f1_piano.mp3",
+   "ms": 9048,
+   "sha": "2e5919757af2",
+   "text": "Phase one: low Earth orbit and planning. Solving the intercept window with the Moon in motion, simulating a finite burn with gravity losses included."
+  },
+  "it.f1_calc": {
+   "f": "assets/audio/comms/it_f1_calc.mp3",
+   "ms": 8664,
+   "sha": "6be02f9ecae6",
+   "text": "Piano calcolato: accensione T plus X risolta. Allineamento prograde in corso: i motori puntano lungo il vettore di velocità."
+  },
+  "en.f1_calc": {
+   "f": "assets/audio/comms/en_f1_calc.mp3",
+   "ms": 7944,
+   "sha": "17fad8b8ac9a",
+   "text": "Flight plan computed: the T plus X ignition is solved. Prograde alignment in progress: engines point along the velocity vector."
+  },
+  "it.f2_tli": {
+   "f": "assets/audio/comms/it_f2_tli.mp3",
+   "ms": 8808,
+   "sha": "c9f5dea02152",
+   "text": "Fase due: accensione TLI. Motori accesi, spinta nominale. Osserva l'apogeo allungarsi verso la Luna."
+  },
+  "en.f2_tli": {
+   "f": "assets/audio/comms/en_f2_tli.mp3",
+   "ms": 8496,
+   "sha": "41a68ddaafd5",
+   "text": "Phase two: trans-lunar injection ignition. Engines running, thrust nominal. Watch the apogee stretch toward the Moon."
+  },
+  "en.f2_meco@1600": {
+   "f": "assets/audio/comms/en_f2_meco_1600.mp3",
+   "ms": 10632,
+   "sha": "a117e96a31d2",
+   "text": "Meco, engine cutoff. Actual delta v one thousand six hundred meters per second, gravity losses included. The prediction confirms the transfer to the Moon."
+  },
+  "en.f2_meco@1800": {
+   "f": "assets/audio/comms/en_f2_meco_1800.mp3",
+   "ms": 10488,
+   "sha": "4d81f2743d87",
+   "text": "Meco, engine cutoff. Actual delta v one thousand eight hundred meters per second, gravity losses included. The prediction confirms the transfer to the Moon."
+  },
+  "en.f2_meco@2000": {
+   "f": "assets/audio/comms/en_f2_meco_2000.mp3",
+   "ms": 9960,
+   "sha": "c9e2487c555c",
+   "text": "Meco, engine cutoff. Actual delta v two thousand meters per second, gravity losses included. The prediction confirms the transfer to the Moon."
+  },
+  "en.f2_meco@2200": {
+   "f": "assets/audio/comms/en_f2_meco_2200.mp3",
+   "ms": 10464,
+   "sha": "ef3eebc9f0df",
+   "text": "Meco, engine cutoff. Actual delta v two thousand two hundred meters per second, gravity losses included. The prediction confirms the transfer to the Moon."
+  },
+  "en.f2_meco@2400": {
+   "f": "assets/audio/comms/en_f2_meco_2400.mp3",
+   "ms": 10488,
+   "sha": "44efdbcc260c",
+   "text": "Meco, engine cutoff. Actual delta v two thousand four hundred meters per second, gravity losses included. The prediction confirms the transfer to the Moon."
+  },
+  "en.f2_meco@2600": {
+   "f": "assets/audio/comms/en_f2_meco_2600.mp3",
+   "ms": 10560,
+   "sha": "68de2ef723d4",
+   "text": "Meco, engine cutoff. Actual delta v two thousand six hundred meters per second, gravity losses included. The prediction confirms the transfer to the Moon."
+  },
+  "en.f2_meco@2800": {
+   "f": "assets/audio/comms/en_f2_meco_2800.mp3",
+   "ms": 10440,
+   "sha": "d0f597db202d",
+   "text": "Meco, engine cutoff. Actual delta v two thousand eight hundred meters per second, gravity losses included. The prediction confirms the transfer to the Moon."
+  },
+  "it.f2_burn@400": {
+   "f": "assets/audio/comms/it_f2_burn_400.mp3",
+   "ms": 8328,
+   "sha": "def6adb12439",
+   "text": "TLI in corso: delta v bruciato quattrocento metri al secondo. Continuo finché la previsione non tocca la sfera d'influenza lunare."
+  },
+  "en.f2_burn@400": {
+   "f": "assets/audio/comms/en_f2_burn_400.mp3",
+   "ms": 8712,
+   "sha": "0fa1d6c4ac4e",
+   "text": "Trans-lunar injection in progress: delta v burned four hundred meters per second. Continuing until the prediction reaches lunar sphere of influence."
+  },
+  "it.f2_burn@800": {
+   "f": "assets/audio/comms/it_f2_burn_800.mp3",
+   "ms": 8184,
+   "sha": "59049c9bf51a",
+   "text": "TLI in corso: delta v bruciato ottocento metri al secondo. Continuo finché la previsione non tocca la sfera d'influenza lunare."
+  },
+  "en.f2_burn@800": {
+   "f": "assets/audio/comms/en_f2_burn_800.mp3",
+   "ms": 8640,
+   "sha": "04356c7aab14",
+   "text": "Trans-lunar injection in progress: delta v burned eight hundred meters per second. Continuing until the prediction reaches lunar sphere of influence."
+  },
+  "it.f2_burn@1200": {
+   "f": "assets/audio/comms/it_f2_burn_1200.mp3",
+   "ms": 8448,
+   "sha": "9b334edb9db7",
+   "text": "TLI in corso: delta v bruciato milleduecento metri al secondo. Continuo finché la previsione non tocca la sfera d'influenza lunare."
+  },
+  "en.f2_burn@1200": {
+   "f": "assets/audio/comms/en_f2_burn_1200.mp3",
+   "ms": 9288,
+   "sha": "e33d065f8619",
+   "text": "Trans-lunar injection in progress: delta v burned one thousand two hundred meters per second. Continuing until the prediction reaches lunar sphere of influence."
+  },
+  "it.f2_burn@1600": {
+   "f": "assets/audio/comms/it_f2_burn_1600.mp3",
+   "ms": 8472,
+   "sha": "05175a793cc8",
+   "text": "TLI in corso: delta v bruciato milleseicento metri al secondo. Continuo finché la previsione non tocca la sfera d'influenza lunare."
+  },
+  "en.f2_burn@1600": {
+   "f": "assets/audio/comms/en_f2_burn_1600.mp3",
+   "ms": 9432,
+   "sha": "bddf6615e142",
+   "text": "Trans-lunar injection in progress: delta v burned one thousand six hundred meters per second. Continuing until the prediction reaches lunar sphere of influence."
+  },
+  "it.f2_burn@2000": {
+   "f": "assets/audio/comms/it_f2_burn_2000.mp3",
+   "ms": 8112,
+   "sha": "057652b254a2",
+   "text": "TLI in corso: delta v bruciato duemila metri al secondo. Continuo finché la previsione non tocca la sfera d'influenza lunare."
+  },
+  "en.f2_burn@2000": {
+   "f": "assets/audio/comms/en_f2_burn_2000.mp3",
+   "ms": 8760,
+   "sha": "a438cefe2585",
+   "text": "Trans-lunar injection in progress: delta v burned two thousand meters per second. Continuing until the prediction reaches lunar sphere of influence."
+  },
+  "it.f2_burn@2400": {
+   "f": "assets/audio/comms/it_f2_burn_2400.mp3",
+   "ms": 8736,
+   "sha": "3dd3dbd2b650",
+   "text": "TLI in corso: delta v bruciato duemilaquattrocento metri al secondo. Continuo finché la previsione non tocca la sfera d'influenza lunare."
+  },
+  "en.f2_burn@2400": {
+   "f": "assets/audio/comms/en_f2_burn_2400.mp3",
+   "ms": 9264,
+   "sha": "04c54c54c6f9",
+   "text": "Trans-lunar injection in progress: delta v burned two thousand four hundred meters per second. Continuing until the prediction reaches lunar sphere of influence."
+  },
+  "it.f2_burn@2800": {
+   "f": "assets/audio/comms/it_f2_burn_2800.mp3",
+   "ms": 8664,
+   "sha": "bde8bb99f5ce",
+   "text": "TLI in corso: delta v bruciato duemilaottocento metri al secondo. Continuo finché la previsione non tocca la sfera d'influenza lunare."
+  },
+  "en.f2_burn@2800": {
+   "f": "assets/audio/comms/en_f2_burn_2800.mp3",
+   "ms": 9168,
+   "sha": "a692b9cd9cce",
+   "text": "Trans-lunar injection in progress: delta v burned two thousand eight hundred meters per second. Continuing until the prediction reaches lunar sphere of influence."
+  },
+  "it.f3_cruise": {
+   "f": "assets/audio/comms/it_f3_cruise.mp3",
+   "ms": 10368,
+   "sha": "43c84dc6936b",
+   "text": "Fase tre: crociera cislunare. Warp intelligente attivo fino a cinquemila. Ridurrò automaticamente avvicinandoci alla Luna per guidare la frenata."
+  },
+  "en.f3_cruise": {
+   "f": "assets/audio/comms/en_f3_cruise.mp3",
+   "ms": 9552,
+   "sha": "dbae97e8f6d1",
+   "text": "Phase three: cislunar coast. Smart warp active up to five thousand. I will reduce it automatically as we approach the Moon to guide the braking."
+  },
+  "it.f3_warpdown": {
+   "f": "assets/audio/comms/it_f3_warpdown.mp3",
+   "ms": 6720,
+   "sha": "123363efee94",
+   "text": "Riduco il warp a cento. Siamo in vista della Luna: serve risoluzione fine per la manovra di inserzione."
+  },
+  "en.f3_warpdown": {
+   "f": "assets/audio/comms/en_f3_warpdown.mp3",
+   "ms": 6432,
+   "sha": "94e806640f70",
+   "text": "Reducing warp to one hundred. The Moon is in sight: we need fine resolution for the insertion maneuver."
+  },
+  "it.f4_soi": {
+   "f": "assets/audio/comms/it_f4_soi.mp3",
+   "ms": 11232,
+   "sha": "a64837671cb4",
+   "text": "Fase quattro: ingresso nella sfera d'influenza lunare. Passo al frame selenocentrico e mi allineo retrogrado: la traiettoria è iperbolica, senza frenata sfrecceremmo oltre."
+  },
+  "en.f4_soi": {
+   "f": "assets/audio/comms/en_f4_soi.mp3",
+   "ms": 10824,
+   "sha": "93bf7244ea9c",
+   "text": "Phase four: entering the lunar sphere of influence. Switching to the selenocentric frame and aligning retrograde: the trajectory is hyperbolic, without braking we would fly right past."
+  },
+  "it.f4_loi@300": {
+   "f": "assets/audio/comms/it_f4_loi_300.mp3",
+   "ms": 11496,
+   "sha": "5c9af5ae3c61",
+   "text": "Fase quattro: accensione LOI, motori in retrogrado. Dobbiamo sottrarre circa trecento metri al secondo: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  "en.f4_loi@300": {
+   "f": "assets/audio/comms/en_f4_loi_300.mp3",
+   "ms": 10512,
+   "sha": "47472053899a",
+   "text": "Phase four: lunar orbit insertion burn, engines retrograde. We must shed about three hundred meters per second: when specific energy turns negative, the orbit closes."
+  },
+  "it.f4_loi@400": {
+   "f": "assets/audio/comms/it_f4_loi_400.mp3",
+   "ms": 11712,
+   "sha": "4daa02fd8917",
+   "text": "Fase quattro: accensione LOI, motori in retrogrado. Dobbiamo sottrarre circa quattrocento metri al secondo: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  "en.f4_loi@400": {
+   "f": "assets/audio/comms/en_f4_loi_400.mp3",
+   "ms": 10536,
+   "sha": "7266d2ae3f3a",
+   "text": "Phase four: lunar orbit insertion burn, engines retrograde. We must shed about four hundred meters per second: when specific energy turns negative, the orbit closes."
+  },
+  "it.f4_loi@500": {
+   "f": "assets/audio/comms/it_f4_loi_500.mp3",
+   "ms": 11688,
+   "sha": "1a81839ee525",
+   "text": "Fase quattro: accensione LOI, motori in retrogrado. Dobbiamo sottrarre circa cinquecento metri al secondo: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  "en.f4_loi@500": {
+   "f": "assets/audio/comms/en_f4_loi_500.mp3",
+   "ms": 10560,
+   "sha": "51266cc39ba2",
+   "text": "Phase four: lunar orbit insertion burn, engines retrograde. We must shed about five hundred meters per second: when specific energy turns negative, the orbit closes."
+  },
+  "it.f4_loi@600": {
+   "f": "assets/audio/comms/it_f4_loi_600.mp3",
+   "ms": 11328,
+   "sha": "e8824e48b23c",
+   "text": "Fase quattro: accensione LOI, motori in retrogrado. Dobbiamo sottrarre circa seicento metri al secondo: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  "en.f4_loi@600": {
+   "f": "assets/audio/comms/en_f4_loi_600.mp3",
+   "ms": 10584,
+   "sha": "8cedb9ac82a2",
+   "text": "Phase four: lunar orbit insertion burn, engines retrograde. We must shed about six hundred meters per second: when specific energy turns negative, the orbit closes."
+  },
+  "it.f4_loi@700": {
+   "f": "assets/audio/comms/it_f4_loi_700.mp3",
+   "ms": 11664,
+   "sha": "a751a88e7fab",
+   "text": "Fase quattro: accensione LOI, motori in retrogrado. Dobbiamo sottrarre circa settecento metri al secondo: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  "en.f4_loi@700": {
+   "f": "assets/audio/comms/en_f4_loi_700.mp3",
+   "ms": 10680,
+   "sha": "6d7c0115df87",
+   "text": "Phase four: lunar orbit insertion burn, engines retrograde. We must shed about seven hundred meters per second: when specific energy turns negative, the orbit closes."
+  },
+  "it.f4_loi@800": {
+   "f": "assets/audio/comms/it_f4_loi_800.mp3",
+   "ms": 11592,
+   "sha": "d0dbdc48566a",
+   "text": "Fase quattro: accensione LOI, motori in retrogrado. Dobbiamo sottrarre circa ottocento metri al secondo: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  "en.f4_loi@800": {
+   "f": "assets/audio/comms/en_f4_loi_800.mp3",
+   "ms": 10512,
+   "sha": "de34fff5e023",
+   "text": "Phase four: lunar orbit insertion burn, engines retrograde. We must shed about eight hundred meters per second: when specific energy turns negative, the orbit closes."
+  },
+  "it.f4_loi@900": {
+   "f": "assets/audio/comms/it_f4_loi_900.mp3",
+   "ms": 11544,
+   "sha": "c06b633bcff3",
+   "text": "Fase quattro: accensione LOI, motori in retrogrado. Dobbiamo sottrarre circa novecento metri al secondo: quando l'energia specifica diventa negativa, l'orbita si chiude."
+  },
+  "en.f4_loi@900": {
+   "f": "assets/audio/comms/en_f4_loi_900.mp3",
+   "ms": 10608,
+   "sha": "97ddefac2db7",
+   "text": "Phase four: lunar orbit insertion burn, engines retrograde. We must shed about nine hundred meters per second: when specific energy turns negative, the orbit closes."
+  },
+  "it.f4_done@1200": {
+   "f": "assets/audio/comms/it_f4_done_1200.mp3",
+   "ms": 10584,
+   "sha": "d5b7406daa7f",
+   "text": "Spegnimento LOI completato: velocità ridotta a milleduecento metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@1200": {
+   "f": "assets/audio/comms/en_f4_done_1200.mp3",
+   "ms": 10536,
+   "sha": "d630aa632862",
+   "text": "Lunar orbit insertion complete: speed reduced to one thousand two hundred meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f4_done@1300": {
+   "f": "assets/audio/comms/it_f4_done_1300.mp3",
+   "ms": 10584,
+   "sha": "5117e48e818d",
+   "text": "Spegnimento LOI completato: velocità ridotta a milletrecento metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@1300": {
+   "f": "assets/audio/comms/en_f4_done_1300.mp3",
+   "ms": 10512,
+   "sha": "f66d738dca78",
+   "text": "Lunar orbit insertion complete: speed reduced to one thousand three hundred meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f4_done@1400": {
+   "f": "assets/audio/comms/it_f4_done_1400.mp3",
+   "ms": 10752,
+   "sha": "efcbff15cf41",
+   "text": "Spegnimento LOI completato: velocità ridotta a millequattrocento metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@1400": {
+   "f": "assets/audio/comms/en_f4_done_1400.mp3",
+   "ms": 10512,
+   "sha": "85523a41f52e",
+   "text": "Lunar orbit insertion complete: speed reduced to one thousand four hundred meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f4_done@1500": {
+   "f": "assets/audio/comms/it_f4_done_1500.mp3",
+   "ms": 10752,
+   "sha": "90258604a99a",
+   "text": "Spegnimento LOI completato: velocità ridotta a millecinquecento metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@1500": {
+   "f": "assets/audio/comms/en_f4_done_1500.mp3",
+   "ms": 10632,
+   "sha": "4e2d6d30c8c1",
+   "text": "Lunar orbit insertion complete: speed reduced to one thousand five hundred meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f4_done@1600": {
+   "f": "assets/audio/comms/it_f4_done_1600.mp3",
+   "ms": 10656,
+   "sha": "a5cbb811a477",
+   "text": "Spegnimento LOI completato: velocità ridotta a milleseicento metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@1600": {
+   "f": "assets/audio/comms/en_f4_done_1600.mp3",
+   "ms": 10656,
+   "sha": "7e3676f6c774",
+   "text": "Lunar orbit insertion complete: speed reduced to one thousand six hundred meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f4_done@1700": {
+   "f": "assets/audio/comms/it_f4_done_1700.mp3",
+   "ms": 10704,
+   "sha": "745e6d363c60",
+   "text": "Spegnimento LOI completato: velocità ridotta a millesettecento metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@1700": {
+   "f": "assets/audio/comms/en_f4_done_1700.mp3",
+   "ms": 10680,
+   "sha": "dbb0ed68cb1f",
+   "text": "Lunar orbit insertion complete: speed reduced to one thousand seven hundred meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f4_done@1800": {
+   "f": "assets/audio/comms/it_f4_done_1800.mp3",
+   "ms": 10656,
+   "sha": "a478d7e11eb4",
+   "text": "Spegnimento LOI completato: velocità ridotta a milleottocento metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@1800": {
+   "f": "assets/audio/comms/en_f4_done_1800.mp3",
+   "ms": 10464,
+   "sha": "36c25fe57050",
+   "text": "Lunar orbit insertion complete: speed reduced to one thousand eight hundred meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f4_done@1900": {
+   "f": "assets/audio/comms/it_f4_done_1900.mp3",
+   "ms": 10632,
+   "sha": "8087214f253e",
+   "text": "Spegnimento LOI completato: velocità ridotta a millenovecento metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@1900": {
+   "f": "assets/audio/comms/en_f4_done_1900.mp3",
+   "ms": 10584,
+   "sha": "24ef9664c85f",
+   "text": "Lunar orbit insertion complete: speed reduced to one thousand nine hundred meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f4_done@2000": {
+   "f": "assets/audio/comms/it_f4_done_2000.mp3",
+   "ms": 10272,
+   "sha": "b6f3d89cbc5b",
+   "text": "Spegnimento LOI completato: velocità ridotta a duemila metri al secondo. Orbita lunare stabilita, l'energia specifica è negativa: siamo in orbita chiusa."
+  },
+  "en.f4_done@2000": {
+   "f": "assets/audio/comms/en_f4_done_2000.mp3",
+   "ms": 9840,
+   "sha": "06b19a4c62d3",
+   "text": "Lunar orbit insertion complete: speed reduced to two thousand meters per second. Lunar orbit established, specific energy is negative: we are in a closed orbit."
+  },
+  "it.f5_stage": {
+   "f": "assets/audio/comms/it_f5_stage.mp3",
+   "ms": 11448,
+   "sha": "731b74706ee6",
+   "text": "Fase cinque: separazione del modulo propulsione. Il lander passa ai quattro motori principali. Il modulo esaurito deorbita e impatterà la Luna in un punto controllato."
+  },
+  "en.f5_stage": {
+   "f": "assets/audio/comms/en_f5_stage.mp3",
+   "ms": 10440,
+   "sha": "aaf6039dc594",
+   "text": "Phase five: propulsion module separation. The lander switches to the four main engines. The spent module deorbits and will impact the Moon at a controlled point."
+  },
+  "it.f5_impact": {
+   "f": "assets/audio/comms/it_f5_impact.mp3",
+   "ms": 7272,
+   "sha": "3d88a4513363",
+   "text": "Impatto del modulo propulsione confermato: crash deliberato. Il lander è pronto per la discesa sulla Luna."
+  },
+  "en.f5_impact": {
+   "f": "assets/audio/comms/en_f5_impact.mp3",
+   "ms": 6264,
+   "sha": "95b03d5d494e",
+   "text": "Propulsion module impact confirmed: deliberate crash. The lander is ready for the descent to the Moon."
+  },
+  "it.f6_deorbit": {
+   "f": "assets/audio/comms/it_f6_deorbit.mp3",
+   "ms": 7824,
+   "sha": "3a2db84c5ae8",
+   "text": "Fase sei: deorbitazione. Accensione retrograda per abbassare il perilune a venticinque chilometri sopra la superficie."
+  },
+  "en.f6_deorbit": {
+   "f": "assets/audio/comms/en_f6_deorbit.mp3",
+   "ms": 7224,
+   "sha": "2ed1e624c72a",
+   "text": "Phase six: deorbit burn. Retrograde firing to lower the perilune to twenty-five kilometers above the surface."
+  },
+  "it.f6_deorbit_done@15": {
+   "f": "assets/audio/comms/it_f6_deorbit_done_15.mp3",
+   "ms": 8928,
+   "sha": "7ffc375c7dba",
+   "text": "Deorbit completata: perilune quindici chilometri. In caduta verso il punto di inserzione: all'ultimo passaggio frenerò per il PDIT."
+  },
+  "en.f6_deorbit_done@15": {
+   "f": "assets/audio/comms/en_f6_deorbit_done_15.mp3",
+   "ms": 8088,
+   "sha": "4436dce66148",
+   "text": "Deorbit complete: perilune fifteen kilometers. Falling toward the insertion point: on the last pass I will brake for PDIT."
+  },
+  "it.f6_deorbit_done@20": {
+   "f": "assets/audio/comms/it_f6_deorbit_done_20.mp3",
+   "ms": 8808,
+   "sha": "3eca666c613c",
+   "text": "Deorbit completata: perilune venti chilometri. In caduta verso il punto di inserzione: all'ultimo passaggio frenerò per il PDIT."
+  },
+  "en.f6_deorbit_done@20": {
+   "f": "assets/audio/comms/en_f6_deorbit_done_20.mp3",
+   "ms": 7896,
+   "sha": "4aa365d59227",
+   "text": "Deorbit complete: perilune twenty kilometers. Falling toward the insertion point: on the last pass I will brake for PDIT."
+  },
+  "it.f6_deorbit_done@25": {
+   "f": "assets/audio/comms/it_f6_deorbit_done_25.mp3",
+   "ms": 9072,
+   "sha": "8d465069fffb",
+   "text": "Deorbit completata: perilune venticinque chilometri. In caduta verso il punto di inserzione: all'ultimo passaggio frenerò per il PDIT."
+  },
+  "en.f6_deorbit_done@25": {
+   "f": "assets/audio/comms/en_f6_deorbit_done_25.mp3",
+   "ms": 8112,
+   "sha": "8af44311a2fa",
+   "text": "Deorbit complete: perilune twenty-five kilometers. Falling toward the insertion point: on the last pass I will brake for PDIT."
+  },
+  "it.f6_deorbit_done@30": {
+   "f": "assets/audio/comms/it_f6_deorbit_done_30.mp3",
+   "ms": 8784,
+   "sha": "a3f2624a9498",
+   "text": "Deorbit completata: perilune trenta chilometri. In caduta verso il punto di inserzione: all'ultimo passaggio frenerò per il PDIT."
+  },
+  "en.f6_deorbit_done@30": {
+   "f": "assets/audio/comms/en_f6_deorbit_done_30.mp3",
+   "ms": 7872,
+   "sha": "19c0fe5c057e",
+   "text": "Deorbit complete: perilune thirty kilometers. Falling toward the insertion point: on the last pass I will brake for PDIT."
+  },
+  "it.f6_deorbit_done@35": {
+   "f": "assets/audio/comms/it_f6_deorbit_done_35.mp3",
+   "ms": 9072,
+   "sha": "e5ab4e54aad1",
+   "text": "Deorbit completata: perilune trentacinque chilometri. In caduta verso il punto di inserzione: all'ultimo passaggio frenerò per il PDIT."
+  },
+  "en.f6_deorbit_done@35": {
+   "f": "assets/audio/comms/en_f6_deorbit_done_35.mp3",
+   "ms": 8160,
+   "sha": "cc629f7c5a20",
+   "text": "Deorbit complete: perilune thirty-five kilometers. Falling toward the insertion point: on the last pass I will brake for PDIT."
+  },
+  "it.f6_tactical": {
+   "f": "assets/audio/comms/it_f6_tactical.mp3",
+   "ms": 9312,
+   "sha": "7f1492130ed2",
+   "text": "Sotto i venticinque chilometri: vista tattica attiva. Terreno procedurale con crateri e massi, cono LiDAR e zona di atterraggio colorata per pendenza."
+  },
+  "en.f6_tactical": {
+   "f": "assets/audio/comms/en_f6_tactical.mp3",
+   "ms": 9192,
+   "sha": "70770f37c276",
+   "text": "Below twenty-five kilometers: tactical view active. Procedural terrain with craters and boulders, LiDAR cone and landing zone colored by slope."
+  },
+  "it.f6_pdit": {
+   "f": "assets/audio/comms/it_f6_pdit.mp3",
+   "ms": 8424,
+   "sha": "5e225b81bc3e",
+   "text": "Perilune: PDIT, powered descent initiation. Frenata a centosessanta metri al secondo, poi guida PID al sito."
+  },
+  "en.f6_pdit": {
+   "f": "assets/audio/comms/en_f6_pdit.mp3",
+   "ms": 8520,
+   "sha": "9add82fd92f2",
+   "text": "Perilune: PDIT, powered descent initiation. Braking to one hundred sixty meters per second, then PID guidance to the site."
+  },
+  "it.f7_descent": {
+   "f": "assets/audio/comms/it_f7_descent.mp3",
+   "ms": 12672,
+   "sha": "dbef2bf2d47e",
+   "text": "Fase sette: discesa motorizzata. LiDAR completato: sito con pendenza entro i tre gradi. Quattro motori in PID, glide slope e velocità al suolo sotto i tre metri al secondo."
+  },
+  "en.f7_descent": {
+   "f": "assets/audio/comms/en_f7_descent.mp3",
+   "ms": 11640,
+   "sha": "be61e0b045cf",
+   "text": "Phase seven: powered descent. LiDAR complete: site slope within three degrees. Four engines in PID, glide slope and touchdown speed under three meters per second."
+  },
+  "it.f7_touchdown": {
+   "f": "assets/audio/comms/it_f7_touchdown.mp3",
+   "ms": 10344,
+   "sha": "c674072c0cfb",
+   "text": "Touchdown confermato. Velocità verticale sotto i tre metri al secondo e pendenza del sito nei limiti. Allunaggio completato: preparo l'ascesa."
+  },
+  "en.f7_touchdown": {
+   "f": "assets/audio/comms/en_f7_touchdown.mp3",
+   "ms": 9096,
+   "sha": "518ff8e42d01",
+   "text": "Touchdown confirmed. Vertical speed under three meters per second and site slope within limits. Landing complete: preparing the ascent."
+  },
+  "it.f7_surface": {
+   "f": "assets/audio/comms/it_f7_surface.mp3",
+   "ms": 7992,
+   "sha": "65c89a182ee1",
+   "text": "Superficie lunare raggiunta. Il lander è stabile sulla regolite. Premi barra spaziatrice quando vuoi decollare."
+  },
+  "en.f7_surface": {
+   "f": "assets/audio/comms/en_f7_surface.mp3",
+   "ms": 6960,
+   "sha": "15cf3cbee897",
+   "text": "Lunar surface reached. The lander is stable on the regolith. Press the space bar when you want to lift off."
+  },
+  "it.f8_ascent": {
+   "f": "assets/audio/comms/it_f8_ascent.mp3",
+   "ms": 11472,
+   "sha": "ddee83492ab1",
+   "text": "Fase otto: ascesa. I motori accendono dal suolo, salita verticale poi pitch over verso l'orbita di rendezvous. Mengzhou ci attende in orbita bassa lunare."
+  },
+  "en.f8_ascent": {
+   "f": "assets/audio/comms/en_f8_ascent.mp3",
+   "ms": 9888,
+   "sha": "5fe7de72154e",
+   "text": "Phase eight: lunar ascent. Engines ignite from the surface, vertical climb then pitch over toward the rendezvous orbit. Mengzhou awaits in low lunar orbit."
+  },
+  "it.f8_lift": {
+   "f": "assets/audio/comms/it_f8_lift.mp3",
+   "ms": 6120,
+   "sha": "e81d904eabfb",
+   "text": "Liftoff confermato. Siamo saliti dal suolo: pitch over verso l'orbita di rendezvous."
+  },
+  "en.f8_lift": {
+   "f": "assets/audio/comms/en_f8_lift.mp3",
+   "ms": 5424,
+   "sha": "d9ca2cb22afa",
+   "text": "Liftoff confirmed. We are up from the surface: pitch over toward the rendezvous orbit."
+  },
+  "it.f9_rendezvous": {
+   "f": "assets/audio/comms/it_f9_rendezvous.mp3",
+   "ms": 11856,
+   "sha": "ca25cd2f96a7",
+   "text": "Fase nove: rendezvous con Mengzhou. Prima allineo quota e velocità circolare, poi impulso di fase, deriva di chiusura e controimpulso. Aggancio sotto i due chilometri."
+  },
+  "en.f9_rendezvous": {
+   "f": "assets/audio/comms/en_f9_rendezvous.mp3",
+   "ms": 11544,
+   "sha": "e82efd467515",
+   "text": "Phase nine: rendezvous with Mengzhou. First matching altitude and circular speed, then phase impulse, closing drift and counter burn. Docking under two kilometers."
+  },
+  "it.f9_match": {
+   "f": "assets/audio/comms/it_f9_match.mp3",
+   "ms": 3744,
+   "sha": "47a69701e94e",
+   "text": "Rendezvous: allineo quota e velocità con l'orbita di Mengzhou."
+  },
+  "en.f9_match": {
+   "f": "assets/audio/comms/en_f9_match.mp3",
+   "ms": 3408,
+   "sha": "bbb66a5af4c0",
+   "text": "Rendezvous: matching altitude and speed with Mengzhou orbit."
+  },
+  "it.f9_impu1": {
+   "f": "assets/audio/comms/it_f9_impu1.mp3",
+   "ms": 3816,
+   "sha": "b76d69314621",
+   "text": "Impulso di fase: accensione per creare la deriva di chiusura."
+  },
+  "en.f9_impu1": {
+   "f": "assets/audio/comms/en_f9_impu1.mp3",
+   "ms": 2832,
+   "sha": "a7dd2dc413a8",
+   "text": "Phase impulse: burn to create the closing drift."
+  },
+  "it.f9_coast": {
+   "f": "assets/audio/comms/it_f9_coast.mp3",
+   "ms": 4152,
+   "sha": "bb5c3b1117bc",
+   "text": "Deriva di chiusura: aspetto che il gap scenda sotto i dieci chilometri."
+  },
+  "en.f9_coast": {
+   "f": "assets/audio/comms/en_f9_coast.mp3",
+   "ms": 3600,
+   "sha": "80ae1814a938",
+   "text": "Closing drift: waiting for the gap to drop under ten kilometers."
+  },
+  "it.f9_impu2": {
+   "f": "assets/audio/comms/it_f9_impu2.mp3",
+   "ms": 3288,
+   "sha": "0462476cf8fd",
+   "text": "Controimpulso: ricircolarizzo sull'orbita di Mengzhou."
+  },
+  "en.f9_impu2": {
+   "f": "assets/audio/comms/en_f9_impu2.mp3",
+   "ms": 2904,
+   "sha": "cfe778ddc76b",
+   "text": "Counter burn: recircularizing on Mengzhou orbit."
+  },
+  "it.f9_final": {
+   "f": "assets/audio/comms/it_f9_final.mp3",
+   "ms": 4920,
+   "sha": "64bebf965f66",
+   "text": "Chiusura finale: molla di aggancio, velocità relativa sotto il metro al secondo."
+  },
+  "en.f9_final": {
+   "f": "assets/audio/comms/en_f9_final.mp3",
+   "ms": 4320,
+   "sha": "b41edf3ea6f5",
+   "text": "Final closure: docking spring, relative speed under one meter per second."
+  },
+  "it.f9_docked": {
+   "f": "assets/audio/comms/it_f9_docked.mp3",
+   "ms": 7968,
+   "sha": "54fd9db2e807",
+   "text": "Aggancio completato con Mengzhou: equipaggio trasferito. Il propellente residuo è sufficiente per la trans Earth injection."
+  },
+  "en.f9_docked": {
+   "f": "assets/audio/comms/en_f9_docked.mp3",
+   "ms": 6552,
+   "sha": "e5187ed5514d",
+   "text": "Docking complete with Mengzhou: crew transferred. Residual propellant is sufficient for trans-Earth injection."
+  },
+  "it.f10_none": {
+   "f": "assets/audio/comms/it_f10_none.mp3",
+   "ms": 9216,
+   "sha": "70e303e5218a",
+   "text": "Nessuna finestra di trans Earth injection in questa epoca: l'angolo di ingresso sarebbe troppo ripido. Coast in orbita lunare, riscansione tra tre ore."
+  },
+  "en.f10_none": {
+   "f": "assets/audio/comms/en_f10_none.mp3",
+   "ms": 8448,
+   "sha": "4fb1c06065c3",
+   "text": "No trans-Earth injection window this epoch: the entry angle would be too steep. Coasting in lunar orbit, rescanning in three hours."
+  },
+  "it.f10_found@400": {
+   "f": "assets/audio/comms/it_f10_found_400.mp3",
+   "ms": 7992,
+   "sha": "8ac9f92630f7",
+   "text": "Corridoio TEI trovato: delta v quattrocento metri al secondo. Ingresso radente: rimbalzerò sull'atmosfera."
+  },
+  "en.f10_found@400": {
+   "f": "assets/audio/comms/en_f10_found_400.mp3",
+   "ms": 7920,
+   "sha": "b7fa4e2cdc4f",
+   "text": "Trans-Earth injection corridor found: delta v four hundred meters per second. Grazing entry: we will skip off the atmosphere."
+  },
+  "it.f10_found@500": {
+   "f": "assets/audio/comms/it_f10_found_500.mp3",
+   "ms": 8040,
+   "sha": "997696154903",
+   "text": "Corridoio TEI trovato: delta v cinquecento metri al secondo. Ingresso radente: rimbalzerò sull'atmosfera."
+  },
+  "en.f10_found@500": {
+   "f": "assets/audio/comms/en_f10_found_500.mp3",
+   "ms": 7920,
+   "sha": "1b6f121184b1",
+   "text": "Trans-Earth injection corridor found: delta v five hundred meters per second. Grazing entry: we will skip off the atmosphere."
+  },
+  "it.f10_found@600": {
+   "f": "assets/audio/comms/it_f10_found_600.mp3",
+   "ms": 7896,
+   "sha": "71f0dcf43da4",
+   "text": "Corridoio TEI trovato: delta v seicento metri al secondo. Ingresso radente: rimbalzerò sull'atmosfera."
+  },
+  "en.f10_found@600": {
+   "f": "assets/audio/comms/en_f10_found_600.mp3",
+   "ms": 7968,
+   "sha": "a5d83d1c41d6",
+   "text": "Trans-Earth injection corridor found: delta v six hundred meters per second. Grazing entry: we will skip off the atmosphere."
+  },
+  "it.f10_found@700": {
+   "f": "assets/audio/comms/it_f10_found_700.mp3",
+   "ms": 7944,
+   "sha": "4f191216e8b8",
+   "text": "Corridoio TEI trovato: delta v settecento metri al secondo. Ingresso radente: rimbalzerò sull'atmosfera."
+  },
+  "en.f10_found@700": {
+   "f": "assets/audio/comms/en_f10_found_700.mp3",
+   "ms": 8016,
+   "sha": "1c5ca089d113",
+   "text": "Trans-Earth injection corridor found: delta v seven hundred meters per second. Grazing entry: we will skip off the atmosphere."
+  },
+  "it.f10_found@800": {
+   "f": "assets/audio/comms/it_f10_found_800.mp3",
+   "ms": 7896,
+   "sha": "e1dd14e7b89e",
+   "text": "Corridoio TEI trovato: delta v ottocento metri al secondo. Ingresso radente: rimbalzerò sull'atmosfera."
+  },
+  "en.f10_found@800": {
+   "f": "assets/audio/comms/en_f10_found_800.mp3",
+   "ms": 7872,
+   "sha": "75b47a3abf88",
+   "text": "Trans-Earth injection corridor found: delta v eight hundred meters per second. Grazing entry: we will skip off the atmosphere."
+  },
+  "it.f10_found@900": {
+   "f": "assets/audio/comms/it_f10_found_900.mp3",
+   "ms": 7872,
+   "sha": "bbf23d35b904",
+   "text": "Corridoio TEI trovato: delta v novecento metri al secondo. Ingresso radente: rimbalzerò sull'atmosfera."
+  },
+  "en.f10_found@900": {
+   "f": "assets/audio/comms/en_f10_found_900.mp3",
+   "ms": 7920,
+   "sha": "8be602d82f0e",
+   "text": "Trans-Earth injection corridor found: delta v nine hundred meters per second. Grazing entry: we will skip off the atmosphere."
+  },
+  "it.f10_found@1000": {
+   "f": "assets/audio/comms/it_f10_found_1000.mp3",
+   "ms": 7608,
+   "sha": "ebbff35eadf8",
+   "text": "Corridoio TEI trovato: delta v mille metri al secondo. Ingresso radente: rimbalzerò sull'atmosfera."
+  },
+  "en.f10_found@1000": {
+   "f": "assets/audio/comms/en_f10_found_1000.mp3",
+   "ms": 8016,
+   "sha": "34765a81ea1d",
+   "text": "Trans-Earth injection corridor found: delta v one thousand meters per second. Grazing entry: we will skip off the atmosphere."
+  },
+  "it.f10_burn": {
+   "f": "assets/audio/comms/it_f10_burn.mp3",
+   "ms": 5688,
+   "sha": "f06a30bbd8b6",
+   "text": "Accensione TEI, prograde. Sfuggiamo alla gravità lunare verso la Terra."
+  },
+  "en.f10_burn": {
+   "f": "assets/audio/comms/en_f10_burn.mp3",
+   "ms": 4872,
+   "sha": "3b0a88d75e02",
+   "text": "Trans-Earth injection burn, prograde. Leaving lunar gravity for Earth."
+  },
+  "it.f10_done": {
+   "f": "assets/audio/comms/it_f10_done.mp3",
+   "ms": 6888,
+   "sha": "9807083ec57b",
+   "text": "Corridoio di rientro agganciato: perigeo confermato dopo le correzioni di metà crociera. Buona fortuna."
+  },
+  "en.f10_done": {
+   "f": "assets/audio/comms/en_f10_done.mp3",
+   "ms": 5664,
+   "sha": "451c525928d3",
+   "text": "Entry corridor acquired: perigee confirmed after the mid-course corrections. Good luck."
+  },
+  "it.f10_tei_done": {
+   "f": "assets/audio/comms/it_f10_tei_done.mp3",
+   "ms": 7272,
+   "sha": "0a45f9145fb4",
+   "text": "TEI completata. Tra tre ore di crociera valuterò la traiettoria reale e correggerò il perigeo con micro impulsi."
+  },
+  "en.f10_tei_done": {
+   "f": "assets/audio/comms/en_f10_tei_done.mp3",
+   "ms": 7704,
+   "sha": "05aa6480aafc",
+   "text": "Trans-Earth injection complete. In three hours of coast I will assess the real trajectory and correct the perigee with micro burns."
+  },
+  "it.f10_midcourse": {
+   "f": "assets/audio/comms/it_f10_midcourse.mp3",
+   "ms": 4800,
+   "sha": "b515ad57592c",
+   "text": "Correzione a metà crociera: perigeo aggiornato con un piccolo impulso di traiettoria."
+  },
+  "en.f10_midcourse": {
+   "f": "assets/audio/comms/en_f10_midcourse.mp3",
+   "ms": 4128,
+   "sha": "67e637029838",
+   "text": "Mid-course correction: perigee updated with a small trajectory impulse."
+  },
+  "it.f11_entry": {
+   "f": "assets/audio/comms/it_f11_entry.mp3",
+   "ms": 6744,
+   "sha": "6b21dc9611d7",
+   "text": "Interfaccia atmosferica. Bank one: presento lo scudo con portanza, punto a rimbalzare fuori."
+  },
+  "en.f11_entry": {
+   "f": "assets/audio/comms/en_f11_entry.mp3",
+   "ms": 5856,
+   "sha": "470cfc0a94e5",
+   "text": "Entry interface. Bank one: presenting the shield with lift, aiming to skip back out."
+  },
+  "it.f11_skip@1_0": {
+   "f": "assets/audio/comms/it_f11_skip_1_0.mp3",
+   "ms": 10080,
+   "sha": "def022b000d8",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale uno g."
+  },
+  "en.f11_skip@1_0": {
+   "f": "assets/audio/comms/en_f11_skip_1_0.mp3",
+   "ms": 8760,
+   "sha": "48474c068e3e",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak one g."
+  },
+  "it.f11_skip@1_5": {
+   "f": "assets/audio/comms/it_f11_skip_1_5.mp3",
+   "ms": 10776,
+   "sha": "8bd2b2652b8b",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale uno virgola cinque g."
+  },
+  "en.f11_skip@1_5": {
+   "f": "assets/audio/comms/en_f11_skip_1_5.mp3",
+   "ms": 9408,
+   "sha": "9138b75cb0e2",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak one point five g."
+  },
+  "it.f11_skip@2_0": {
+   "f": "assets/audio/comms/it_f11_skip_2_0.mp3",
+   "ms": 10032,
+   "sha": "269dd5581cb6",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale due g."
+  },
+  "en.f11_skip@2_0": {
+   "f": "assets/audio/comms/en_f11_skip_2_0.mp3",
+   "ms": 8736,
+   "sha": "d225ad848a03",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak two g."
+  },
+  "it.f11_skip@2_5": {
+   "f": "assets/audio/comms/it_f11_skip_2_5.mp3",
+   "ms": 10800,
+   "sha": "c25038ea7972",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale due virgola cinque g."
+  },
+  "en.f11_skip@2_5": {
+   "f": "assets/audio/comms/en_f11_skip_2_5.mp3",
+   "ms": 9360,
+   "sha": "556b7554aeb5",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak two point five g."
+  },
+  "it.f11_skip@3_0": {
+   "f": "assets/audio/comms/it_f11_skip_3_0.mp3",
+   "ms": 10080,
+   "sha": "64f0cfa05f70",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale tre g."
+  },
+  "en.f11_skip@3_0": {
+   "f": "assets/audio/comms/en_f11_skip_3_0.mp3",
+   "ms": 8832,
+   "sha": "527ef24e7fee",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak three g."
+  },
+  "it.f11_skip@3_5": {
+   "f": "assets/audio/comms/it_f11_skip_3_5.mp3",
+   "ms": 10752,
+   "sha": "977957953690",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale tre virgola cinque g."
+  },
+  "en.f11_skip@3_5": {
+   "f": "assets/audio/comms/en_f11_skip_3_5.mp3",
+   "ms": 9408,
+   "sha": "debb82a3460a",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak three point five g."
+  },
+  "it.f11_skip@4_0": {
+   "f": "assets/audio/comms/it_f11_skip_4_0.mp3",
+   "ms": 10224,
+   "sha": "19ad6098fe11",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale quattro g."
+  },
+  "en.f11_skip@4_0": {
+   "f": "assets/audio/comms/en_f11_skip_4_0.mp3",
+   "ms": 8760,
+   "sha": "9aaa2a3a80ed",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak four g."
+  },
+  "it.f11_skip@4_5": {
+   "f": "assets/audio/comms/it_f11_skip_4_5.mp3",
+   "ms": 10944,
+   "sha": "e970bc333a62",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale quattro virgola cinque g."
+  },
+  "en.f11_skip@4_5": {
+   "f": "assets/audio/comms/en_f11_skip_4_5.mp3",
+   "ms": 9384,
+   "sha": "f2001f135932",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak four point five g."
+  },
+  "it.f11_skip@5_0": {
+   "f": "assets/audio/comms/it_f11_skip_5_0.mp3",
+   "ms": 10224,
+   "sha": "ceb246c1655b",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale cinque g."
+  },
+  "en.f11_skip@5_0": {
+   "f": "assets/audio/comms/en_f11_skip_5_0.mp3",
+   "ms": 8832,
+   "sha": "29c0e61176aa",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak five g."
+  },
+  "it.f11_skip@5_5": {
+   "f": "assets/audio/comms/it_f11_skip_5_5.mp3",
+   "ms": 11016,
+   "sha": "c18d4ad9ee2c",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale cinque virgola cinque g."
+  },
+  "en.f11_skip@5_5": {
+   "f": "assets/audio/comms/en_f11_skip_5_5.mp3",
+   "ms": 9456,
+   "sha": "3088045a2e4c",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak five point five g."
+  },
+  "it.f11_skip@6_0": {
+   "f": "assets/audio/comms/it_f11_skip_6_0.mp3",
+   "ms": 10104,
+   "sha": "ea42113c02d4",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale sei g."
+  },
+  "en.f11_skip@6_0": {
+   "f": "assets/audio/comms/en_f11_skip_6_0.mp3",
+   "ms": 8808,
+   "sha": "7ddcfb49eb0c",
+   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak six g."
+  },
+  "it.f11_chutes": {
+   "f": "assets/audio/comms/it_f11_chutes.mp3",
+   "ms": 3264,
+   "sha": "9b7bb721c2bd",
+   "text": "Paracadute aperti: frenamento finale verso l'ammaraggio."
+  },
+  "en.f11_chutes": {
+   "f": "assets/audio/comms/en_f11_chutes.mp3",
+   "ms": 3384,
+   "sha": "f4b00c5444f4",
+   "text": "Chutes deployed: final deceleration toward splashdown."
+  },
+  "it.mission_complete": {
+   "f": "assets/audio/comms/it_mission_complete.mp3",
+   "ms": 11208,
+   "sha": "63b9ccd26ec1",
+   "text": "Ammaraggio. La capsula ha completato il treno di rimbalzi atmosferici e dissipato l'energia di ritorno. Missione completa: dalla LEO alla superficie lunare e ritorno."
+  },
+  "en.mission_complete": {
+   "f": "assets/audio/comms/en_mission_complete.mp3",
+   "ms": 10008,
+   "sha": "2dbb269a5ba7",
+   "text": "Splashdown. The capsule completed the skip re-entry and bled off the return energy. Mission complete: from low Earth orbit to the lunar surface and back."
+  },
+  "it.demo_complete": {
+   "f": "assets/audio/comms/it_demo_complete.mp3",
+   "ms": 7944,
+   "sha": "d99ce6502f1a",
+   "text": "Missione demo completata: orbita lunare stabile. Premi V per il comando manuale, oppure zero per ripetere la demo."
+  },
+  "en.demo_complete": {
+   "f": "assets/audio/comms/en_demo_complete.mp3",
+   "ms": 6816,
+   "sha": "d7489d301712",
+   "text": "Demo mission complete: stable lunar orbit. Press V for manual control, or zero to repeat the demo."
+  },
+  "it.crash": {
+   "f": "assets/audio/comms/it_crash.mp3",
+   "ms": 6696,
+   "sha": "baa56608a3bd",
+   "text": "Impatto: la missione è fallita. Fault di discesa troppo aggressivo o corridoio TEI mancato."
+  },
+  "en.crash": {
+   "f": "assets/audio/comms/en_crash.mp3",
+   "ms": 6864,
+   "sha": "a325395a5734",
+   "text": "Impact: the mission has failed. Descent fault too aggressive, or the trans-Earth injection window was missed."
+  },
+  "it.check_it": {
+   "f": "assets/audio/comms/it_check_it.mp3",
+   "ms": 4704,
+   "sha": "c70020fba46d",
+   "text": "Prova radio. Il controllo è attivo. Italiano."
+  },
+  "en.check_it": {
+   "f": "assets/audio/comms/en_check_it.mp3",
+   "ms": 4176,
+   "sha": "8c8b1d89c080",
+   "text": "Radio check. Control is on. Italian."
+  },
+  "it.check_en": {
+   "f": "assets/audio/comms/it_check_en.mp3",
+   "ms": 4680,
+   "sha": "1b8d00646011",
+   "text": "Prova radio. Il controllo è attivo. Inglese."
+  },
+  "en.check_en": {
+   "f": "assets/audio/comms/en_check_en.mp3",
+   "ms": 4200,
+   "sha": "bb7d6db65761",
+   "text": "Radio check. Control is on. English."
+  },
+  "it.fault_yf36": {
+   "f": "assets/audio/comms/it_fault_yf36.mp3",
+   "ms": 11736,
+   "sha": "010ce6de05d8",
+   "text": "Fault: YF trentasei numero due offline. Per logica diagonale si spegne anche l'opposto: spinta al cinquanta percento. Il PID compensa, l'allunaggio prosegue."
+  },
+  "en.fault_yf36": {
+   "f": "assets/audio/comms/en_fault_yf36.mp3",
+   "ms": 12120,
+   "sha": "9789a7ca5d18",
+   "text": "Fault: YF thirty-six number two offline. By diagonal logic the opposite one shuts down too: fifty percent thrust. The PID compensates, the landing continues."
+  },
+  "it.fault_raptor": {
+   "f": "assets/audio/comms/it_fault_raptor.mp3",
+   "ms": 8256,
+   "sha": "829b2ff2d8cd",
+   "text": "Fault: Raptor numero due offline: spinta ridotta al cinquanta percento. Il PID compensa l'assetto, l'allunaggio prosegue."
+  },
+  "en.fault_raptor": {
+   "f": "assets/audio/comms/en_fault_raptor.mp3",
+   "ms": 8424,
+   "sha": "5f460e9e7565",
+   "text": "Fault: Raptor number two offline: thrust down to fifty percent. The PID compensates the attitude, the landing continues."
+  }
+ }
+}

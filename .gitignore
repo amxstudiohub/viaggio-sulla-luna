@@ -1,0 +1,15 @@
+# dipendenze e artefatti (progetto a zero dipendenze: non dovrebbero esistere)
+node_modules/
+package-lock.json
+
+# temporanei
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+__pycache__/
+.cache/
+
+# uscite locali dei tool
+/tmp/
+assets/audio/_bake/

@@ -1,0 +1,43 @@
+CISLUNAR 2030 — Simulatore di viaggio cislunare (CNSA vs Starship HLS)
+=======================================================================
+
+COME AVVIVARLO SU WINDOWS
+------------------------
+1. Estrai LO ZIP in una cartella (es. C:\Cislunar2030) mantenendo le
+   sottocartelle (core, systems, ui, assets, data, styles).
+2. Doppio clic su  Avvio_Windows.bat
+   → parte un mini-server locale e il browser apre
+     http://localhost:8137
+   Il file .bat usa Python se installato, altrimenti Node.js.
+   (NON aprire index.html con doppio clic: i moduli ES6 richiedono
+    un server http, da file:// il browser li blocca per sicurezza.)
+
+3. Per fermare il server: chiudi la finestra nera del prompt.
+
+REQUISITI
+---------
+- Windows 10/11 con browser moderno: Edge (già presente), Chrome o Firefox
+- Python 3 (https://python.org, spunta "Add python.exe to PATH")
+  oppure Node.js LTS (https://nodejs.org) — anche uno solo dei due
+- Nessuna libreria da installare: zero dipendenze
+
+CONTROLLI PRINCIPALI
+--------------------
+  1 / 2      missione CNSA (Mengzhou+Lanyue) o SpaceX (Starship HLS)
+  V          autopilota on/off        Spazio/N   salta alla fase dopo
+  Pag Su/Giù warp manuale (anche in autopilota)
+  W/S throttle · A/D rotazione · P/R pro/retro-hold · X staging
+  , / .  warp · M node · [ ] delta-v node · Enter commit · C cut
+  1/2/3 camera Terra/Luna/Nave · K vista cinema · L radio ITA/ENG/MUTE
+  0 reset missione · F guasto motore (test)
+  Sulla superficie lunare: SPAZIO = decollo (F8).
+
+La radio CapCom usa una VOCE NEURALE PRE-REGISTRATA inclusa nello zip
+(cartella assets/audio): nessuna sintesi vocale da installare, nessuna
+connessione internet, la frase parte insieme al tono radio. Il tasto L
+cicla ITA / ENG / MUTE. La voce del browser NON viene mai usata: se un
+messaggio non fosse nel pacchetto (copione modificato a mano) si sentono
+i soli toni radio e nella fascia in basso appare la nota RADIO: ...
+
+Per i test automatici (facoltativo, serve Node.js):
+  node tests/smoke.mjs   ·   node tests/integration.mjs
