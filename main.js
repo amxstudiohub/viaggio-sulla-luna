@@ -204,7 +204,10 @@ function jumpTo(i) {
   jump.lastProgress = performance.now();
   audio.muted = true;
   audio.stop();          // taglia la voce in onda (clip o TTS che sia)
-  hud.director('SALTO FASE', '⏭ SALTO IN CORSO verso ' + JUMPS[i].label + ' — fast-forward della simulazione…');
+  hud.director('SALTO FASE', '⏭ SALTO IN CORSO verso ' + JUMPS[i].label +
+    (i >= 6 && autopilot.phase !== PHASE.CRUCIERA && autopilot.phase !== PHASE.RIENTRO
+      ? ' — prima va calcolata la finestra di rientro verso la Terra: può richiedere un minuto…'
+      : ' — fast-forward della simulazione…'));
 }
 
 function jumpNext() {
@@ -216,7 +219,11 @@ function jumpNext() {
 function driveJump() {
   const t0 = performance.now();
   const js = (window.__jumpStats = { iters: 0, worstMs: 0 });
-  while (performance.now() - t0 < 60) { // ~60% del frame: salto rapido ma UI reattiva
+  // la ricerca della finestra TEI è pura CPU: durante un salto le dedichiamo più
+  // budget di frame, così finisce prima (la UI resta comunque sopra i 25 fps)
+  const searching = autopilot.phase === PHASE.TEI;
+  const budget = searching ? 110 : 60;
+  while (performance.now() - t0 < budget) {
     js.iters++;
     const ti = performance.now();
     if (JUMPS[jump.idx].reached() || stepIndex() > jump.idx || sim.status === 'CRASHED' || sim.status === 'SPLASHDOWN') { endJump(); return; }
@@ -229,7 +236,7 @@ function driveJump() {
     autopilot.update();
     // fasi critiche: warp limitato per non saltare le finestre di trigger (LOI, PDIT, touchdown)
     const p = autopilot.phase;
-    const crit = p === PHASE.LOI || p === PHASE.STAGE || p === PHASE.DESAT || p === PHASE.DISCESA || p === PHASE.ASCESA;
+    const crit = p === PHASE.LOI || p === PHASE.STAGE || p === PHASE.DESAT || p === PHASE.DISCESA || p === PHASE.ASCESA || p === PHASE.TEI;
     const w = crit ? Math.min(warp.current, 10) : Math.max(Math.min(warp.current, 5000), 10);
     const n = Math.max(1, Math.round(w / 6));
     for (let i = 0; i < n; i++) { autopilot.hold(); sim.step(DT_PHYS); if (sim.status !== 'NOMINAL') break; }
@@ -257,7 +264,12 @@ window.addEventListener('keydown', (ev) => {
     if (k === '2') startMission(MISSIONS.SPACEX);
     return;
   }
-  if (k === '0') { startMission(sim.mission); return; }
+  if (ev.code === 'Digit0') {
+    // il reset non puo' scappare da un semplice 0: cancella tutta la missione
+    if (ev.shiftKey) { startMission(sim.mission); return; }
+    sim.log('Reset ignorato: premi SHIFT+0 per ripartire davvero da zero', 'info');
+    return;
+  }
   if (k === 'v') { toggleAutopilot(); return; }
   if (k === 'f') { sim.faultEngine(); return; } // guasto diagonale 1/4 YF-36
   if (k === 'pageup' || k === 'pagedown') { // warp manuale sempre disponibile (anche in autopilota)
