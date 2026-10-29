@@ -53,4 +53,7 @@ for (const i of [5, 6, 7, 8]) {
     ' | step ' + last.step + ' | quota Terra ' + Math.round(last.altE / 100) + ' km reali | ' + last.ev);
   if (last.st === 'SPLASHDOWN') break;
 }
-chrome.kill(); process.exit(0);
+const ferr = await ev('window.__frameError||""');
+console.log(ferr ? '  ERRORE DI FRAME: ' + ferr : '  nessun errore di frame');
+chrome.kill();
+process.exit(ferr ? 1 : 0);

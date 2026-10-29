@@ -413,7 +413,7 @@ export class Cockpit {
       for (const k of ['pad', 'smoke', 'booster', 'stage2']) if (E[k]) E[k].style.display = 'none';
       R.ret = { stage: '', age: 0, beat: -1, embers: [], ring: 0, sea: null };
     }
-    const rt = R.ret;
+    const rt = (R.ret = R.ret || { stage: '', age: 0, beat: -1, embers: [], ring: 0, sea: null });
     rt.age += rdt;
     if (E.overlay.width !== Math.round(W * dpr) || E.overlay.height !== Math.round(H * dpr)) {
       E.overlay.width = Math.round(W * dpr); E.overlay.height = Math.round(H * dpr);
@@ -481,6 +481,9 @@ export class Cockpit {
   /** Scambia gli sprite allo stato di rientro corrente. */
   _rientroStage(E, stage) {
     const sp = this._rientroSprites;
+    // se si arriva qui da una cinematica di superficie lunare, i suoi strati vanno spenti
+    if (E.lander) E.lander.style.display = 'none';
+    for (const k of ['pad', 'smoke', 'booster', 'stage2']) if (E[k]) E[k].style.display = 'none';
     const which = stage === 'plasma' ? sp.plasma : stage === 'drogue' ? sp.drogue : sp.mains;
     const ok = which && which.complete && which.naturalWidth;
     if (ok) { E.capsule.src = which.src; E.capsule.style.display = ''; }
