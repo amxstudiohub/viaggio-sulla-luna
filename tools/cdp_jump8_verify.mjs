@@ -1,6 +1,9 @@
 /**
- * Verifica headless della scena terminale: F11/F12/F13 + ammaraggio + recupero.
- * Richiede il server su :8137. Uso: node tools/cdp_splash_verify.mjs
+ * Limite noto: un salto che scavalca la F10 non e' affidabile. La ricerca del
+ * corridoio TEI valuta traiettorie da 62k passi e ha bisogno di girare a warp
+ * bassa in tempo reale; un fast-forward a warp 5000 la supera e la nave sfugge
+ * verso l'esterno (quota che cresce oltre la Luna). Percorso supportato: giocare
+ * (o saltare fino a F10) e poi usare i chip 7/8/9.
  */
 import { spawn } from 'child_process';
 const PORT = 9391;
