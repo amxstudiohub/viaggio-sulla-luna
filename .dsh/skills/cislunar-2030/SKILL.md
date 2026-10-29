@@ -62,9 +62,9 @@ Corridoio TEI: perigeo 57-58 km reali ⇒ UN solo rimbalzo; sotto 56 km non skip
 (watchdog `_richiamo()`). Scena terminale ≈ 122 s reali (warp 3 in atmosfera, 100 sul rimbalzo, 2 coi paracadute).
 
 ## 3. Flusso jump/autopilota (dopo il fix anti-crash 21-10)
-- `jumpTo(i)`: solo in avanti (`stepIndex() > i` ⇒ "già superata"), un salto alla volta, deadline 25 s.
+- `jumpTo(i)`: solo in avanti (`stepIndex() > i` ⇒ "già superata"); un click nuovo **ritargetta** il salto (non va rifiutato). Abort solo su **mancanza di progressi** della sim (15 s) o cap duro 8 min — il vecchio budget "25 s + 24 s per fase" mollava a metà transizione (era il «si blocca» del 29-10).
 - `jumpNext()` (SPAZIO/N) = `stepIndex()+1`.
-- `driveJump`: warp cappato a 10 nelle fasi critiche LOI/STAGE/DESAT/DISCESA/ASCESA (mai saltare finestre PDIT).
+- `driveJump`: warp cappato a 10 nelle fasi critiche LOI/STAGE/DESAT/DISCESA/ASCESA/**TEI** (mai saltare finestre PDIT **né la finestra TEI**: a warp 5000 il corridoio va in mancamento, verificato a 260 milioni di km). Fuori dalle critiche il warp minimo è 10, non 1.
 - Surface hold: a TOUCHDOWN con cine attivo → `surfaceHold=true` (sim congelata), `endJump` se attivo, `tdWait=Infinity`; SPAZIO → `surfaceDone=true; tdWait=sim.t-1` → F8 seamless. `surfaceDone` one-shot, reset in startMission.
 - Warp manuale SEMPRE attivo: PagSu/PagGiù + pulsanti ◀◀/▶▶ (bypassano il guard autopilota di , .).
 - Attenzione: `endAct0` deve ripristinare `E.lander.style.display` (lo staging lo nasconde) — bug "manca l'astronave" già corretto.
@@ -88,6 +88,9 @@ node tests/comms.test.mjs       # copione radio + numeri a parole + matching sor
 node tools/comms_check.mjs      # copertura: ogni messaggio detto ha la sua clip (IT e EN)
 node tools/tts_bake.mjs         # ribake idempotente (solo le righe il cui testo è cambiato)
 node tools/comms_harvest.mjs    # rigenera data/comms_corpus.json (serve server 8137 + chrome)
+node tools/cdp_splash_verify.mjs     # scena F11-F13 completa nel browser: 18 check, ~2 min
+node tools/cdp_chips.mjs             # click dei chip 4→6→7→8→9 partendo dalla Luna
+node tools/cdp_full_mission.mjs play|jumps [sec]   # missione giocata: rileva loop morto / sim ferma
 node tools/cdp_comms_verify.mjs # browser: clip in onda, stop, ENG, zero speechSynthesis
 node tools/cdp_tts_probe.mjs    # missione intera headless: 0 messaggi non baked, 0 speak()
 node tools/cdp_comms_verify.mjs --base=https://amxstudiohub.github.io/viaggio-sulla-luna  # prova il sito live
@@ -97,6 +100,10 @@ Dopo modifiche a physics/autopilot/descent lanciare TUTTA la suite; per UI/cockp
 ## 6. Trappole conosciute (già pagate)
 - `activeGroup`: un gruppo sotto-peso (RCS HLS) NON deve sostituire i Raptor → filtro su T/W>1.05·g locale.
 - PDIT: trigger anche con `moonVT() > 300` (HLS arriva a 25 km con vT~700 m/s, la finestra vUp>-40 non basta).
+- **`frame()` deve avere try/catch**: senza, una sola eccezione ammazza il loop rAF e il gioco «si blocca» per sempre. Ora logga `window.__frameError` + contatori `__frames`/`__frameMs`/`__prof` (upd/phys/rend) per i test.
+- `cine.ret` della cinematica rientro va creato con **lazy-init**: se la vista cinema è già attiva (superficie lunare) il ramo `if (!R.active)` non gira e `rt.age` va in eccezione.
+- **Chip 7/8/9**: se non si è già in crociera di ritorno inseriscono la traiettoria calibrata con `__rientro(periKm, altKm, fase)` (600 km per il 7, 120 km per 8/9). Il fast-forward non può far calcolare la finestra TEI all'autopilota.
+- Tasto `0` = reset missione: ora pretende **SHIFT+0** (un dito sul 0 cancellava tutto: «riparte male»).
 - LiDAR cinematica: verde anche in ascesa (`vOk = asc || ...`).
 - Ombra di contatto a touchdown: spegne il pennacchio impresso nello sprite (ellisse +108 px, non +150).
 - Orizzonte laterale cinematica: feetY = H/2+140 (piedi sprite), fascia regolite scaleY 0.42.
