@@ -109,7 +109,7 @@ export const ATM = {
   mainH: 3000, mainV: 140,       // apertura principali: quota e velocità REALI
   splashV: 12,                   // m/s reali: sotto è ammaraggio, sopra è impatto
   maxG: 6,                       // decelerazione massima sotto paracadute
-  qRef: 120000,                  // flusso termico di riferimento (W/m² reali)
+  qRef: 12000,                  // flusso termico di riferimento (W/m² reali)
   // Volo paracadutato: quota reale → velocità terminale reale.
   terminal: [[7600, 470], [5000, 160], [3000, 70], [1500, 22], [0, 8.5]],
 };

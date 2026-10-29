@@ -76,9 +76,14 @@ const ok = (label) => { n++; console.log('  \u2714 ' + label); };
   assert.equal(slotValue(loi, 'sottrarre ~612 m/s').value, 600);
   assert.equal(slotValue(loi, 'sottrarre ~99999 m/s').value, loi.num.max, 'cappa al massimo');
   assert.equal(slotValue(loi, 'nessun numero qui'), null);
-  const sk = LINES.find((e) => e.id === 'f11_skip');
-  assert.equal(slotValue(sk, 'G max finora 4.2.').key, '4_0');
-  assert.equal(slotValue(sk, 'G max finora 4.4.').key, '4_5');
+  const fc = LINES.find((e) => e.id === 'f10_found');
+  assert.ok(fc && fc.num, 'la riga corridoio TEI ha uno slot numerico');
+  assert.equal(slotValue(fc, 'corridoio TEI trovato: 640 metri').value, 600);
+  assert.equal(slotValue(fc, 'trovato 99999').value, fc.num.max, 'cappa al massimo');
+  assert.equal(slotValue(fc, 'nessun numero qui'), null);
+  const dec = { num: { re: /finora (\d+[.,]\d+)/i, step: 0.5, min: 2, max: 6 } };
+  assert.equal(slotValue(dec, 'G max finora 4.2.').key, '4_0');
+  assert.equal(slotValue(dec, 'G max finora 4.4.').key, '4_5');
   ok('normalizzazione + slot (arrotondamento, cappatura, decimali)');
 }
 

@@ -701,7 +701,7 @@ export class Autopilot {
       const inAtm = altE < ATM.top && altE > 0;
       if (!this.rientro || !this.rientro.skipped) {
         // prima passata: portanza a cabrare finché penetra = lo skip
-        sim.bank = (inAtm && vUp < 0 && sim.qHeat < ATM.qRef * 1.15) ? 1 : 0;
+        sim.bank = (inAtm && vUp < 0 && sim.qHeat < ATM.qRef * 1.6) ? 1 : 0;
       } else {
         // seconda passata: solo modulazione del picco di G (solleva se le G salgono)
         sim.bank = (inAtm && vUp < 0 && sim.gLoad > 4.5) ? 1 : 0;

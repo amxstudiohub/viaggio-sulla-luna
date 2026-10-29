@@ -34,7 +34,7 @@ let done = { plasma: false, drogue: false, main: false, splash: false, rec: fals
 const t0 = Date.now();
 while (Date.now() - t0 < 420000) {
   const j = JSON.parse(await ev('JSON.stringify({st:__sim.status,ch:__sim.chuteStage,q:__sim.qHeat,beat:(__cockpit.cine&&__cockpit.cine.ret)?__cockpit.cine.ret.beat:-9})'));
-  if (!done.plasma && j.q > 60000) { await shot('rientro_plasma'); done.plasma = true; }
+  if (!done.plasma && j.q > 6000) { await shot('rientro_plasma'); done.plasma = true; }
   else if (!done.drogue && j.ch === 'drogue') { await shot('rientro_drogue'); done.drogue = true; }
   else if (!done.main && j.ch === 'main') { await shot('rientro_principali'); done.main = true; }
   else if (!done.splash && j.st === 'SPLASHDOWN') { await shot('ammaraggio'); done.splash = true; }

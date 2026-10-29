@@ -101,7 +101,7 @@ Dopo modifiche a physics/autopilot/descent lanciare TUTTA la suite; per UI/cockp
 - Ombra di contatto a touchdown: spegne il pennacchio impresso nello sprite (ellisse +108 px, non +150).
 - Orizzonte laterale cinematica: feetY = H/2+140 (piedi sprite), fascia regolite scaleY 0.42.
 - Luna procedurale: cache offscreen per bucket 3 px, PRNG seedato (niente flicker).
-- Moduli ES6 da file:// bloccati: su Windows serve il .bat (Python/py/Node fallback).
+- Moduli ES6 da file:// bloccati: serve sempre un server locale (vedi §7); il packaging Windows non esiste più.
 - Voce radio: lo schermo mostra il testo del Director, la radio legge il copione (`data/comms_lines.js`): sono DUE testi diversi. Cambiare una riga del copione senza `node tools/tts_bake.mjs` lascia la clip vecchia (`comms_check` lo segnala come "testo cambiato").
 - Token fine-grained per i push: servono **Contents**, **Administration**, **Pages** e **Workflows** (Read and write). Senza Workflows il push di un file sotto `.github/workflows/` viene rifiutato con 403 anche se i contenuti sono scrivibili. Cambiare una riga del copione senza `node tools/tts_bake.mjs` lascia la clip vecchia (`comms_check` lo segnala come "testo cambiato").
 - **`TimeWarp.set(v)` è muto se `v` non è nella scala**: `set(4)`/`set(200)` non fanno nulla, in silenzio. La scala ora include 2 e 3 (volo in atmosfera).
@@ -112,14 +112,12 @@ Dopo modifiche a physics/autopilot/descent lanciare TUTTA la suite; per UI/cockp
 - Slot numerici = griglia chiusa min/max/step: il valore viene arrotondato e cappato, quindi la clip esiste sempre; se il regex dello slot non matcha, la riga viene letta senza numero.
 - Recovery file corrotto: cache disco Chrome in /tmp/chrome-prof-*/Default/Cache/Cache_Data (grep firma, slice tra 'import {' e ultimo '}' prima di \u0000).
 
-## 7. Packaging Windows (dopo ogni modifica)
-```
-cd ~/Applicazioni/Viaggio_Sulla_Luna
-rm -f /tmp/cislunar.zip Viaggio_Sulla_Luna_Windows.zip
-zip -qr /tmp/cislunar.zip . -x "shots/*" && cp /tmp/cislunar.zip Viaggio_Sulla_Luna_Windows.zip
-```
-Il .bat usa CRLF; `server_node.cjs` DEVE restare .cjs (package.json ha type:module).
-Prima di zippare: `node tools/tts_bake.mjs && node tools/comms_check.mjs` (se il copione è cambiato vanno ribakeate le clip). Zip attuale ~27 MB: 6 MB di manuale + 5 MB di clip radio (png/mp3 non comprimono).
+## 7. Distribuzione (packaging Windows rimosso il 29-10)
+Il gioco è pubblico su GitHub Pages (<https://amxstudiohub.github.io/viaggio-sulla-luna/>):
+`Avvio_Windows.bat`, `server_node.cjs` e `LEGGIMI_WINDOWS.txt` sono eliminati e non vanno reintrodotti.
+In locale usare `node tools/nocache_server.mjs`: `python -m http.server` non invia `Cache-Control`,
+Chrome serve JS vecchi dalla cache e i test CDP diventano falsi verdi.
+Copione cambiato → `node tools/tts_bake.mjs && node tools/comms_harvest.mjs && node tools/comms_check.mjs`.
 
 ## 8. Stato e idee pendenti
 FATTO: Fasi 0-2, audio CapCom i18n, **voce radio a clip neurali pre-registrate (bake offline, IT+EN, 206 clip)**, timeline cliccabile, warp smart, attitude alignment, allunaggio/ascesa cinematici (fiamme, LiDAR, polvere, orizzonte laterale), surface hold, Atto 0 lancio con staging, fix jump anti-crash, Pag±/pulsanti warp, Luna procedurale, zip Windows.

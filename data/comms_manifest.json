@@ -1172,15 +1172,15 @@
   },
   "it.f12_peakg": {
    "f": "assets/audio/comms/it_f12_peakg.mp3",
-   "ms": 6720,
-   "sha": "a07551c683d5",
-   "text": "Picco di decelerazione: quattro g all'equipaggio, limite di progetto sei g. Tutto nei parametri."
+   "ms": 6000,
+   "sha": "81e316c5eb8c",
+   "text": "Picco di decelerazione: siamo al massimo del carico G, ben dentro il limite di progetto di sei g."
   },
   "en.f12_peakg": {
    "f": "assets/audio/comms/en_f12_peakg.mp3",
-   "ms": 6504,
-   "sha": "cc15b97f236e",
-   "text": "Peak deceleration: four g for the crew, six g design limit. Everything within parameters."
+   "ms": 5352,
+   "sha": "7f37fc84f301",
+   "text": "Peak deceleration: we are at the maximum G load, well inside the six g design limit."
   },
   "it.f12_skip": {
    "f": "assets/audio/comms/it_f12_skip.mp3",

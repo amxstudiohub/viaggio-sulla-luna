@@ -442,30 +442,37 @@ export class Cockpit {
       const hy = H * (stage === 'drogue' ? 0.86 : 0.72) + Math.min(70, rt.age * (stage === 'mains' ? 16 : 3));
       this._seaBackdrop(E, W, H, hy, rt.age, stage);
       const sway = Math.sin(rt.age * 1.5) * 3.2, bob = Math.sin(rt.age * 0.8) * 5;
-      const sc = stage === 'drogue' ? 0.6 : 0.92;
+      const sc = stage === 'drogue' ? 0.74 : 0.98;
       E.capsule.style.transform = 'translate(-50%,-50%) translateY(' + (bob - (stage === 'drogue' ? H * 0.16 : H * 0.04)).toFixed(1) +
         'px) rotate(' + sway.toFixed(2) + 'deg) scale(' + sc + ')';
       E.capsule.style.filter = 'brightness(1.05) drop-shadow(0 10px 26px rgba(0,0,0,0.45))';
     } else {
-      const hy = H * 0.54;
+      const hy = H * 0.54;                    // linea d'orizzonte della placca di mare
       this._seaBackdrop(E, W, H, hy, rt.age, 'splash');
-      const bob = Math.sin(rt.age * 1.1) * 4 + Math.sin(rt.age * 2.3) * 1.6;
-      E.capsule.style.transform = 'translate(-50%,-50%) translateY(' + (hy - H / 2 + bob).toFixed(1) +
-        'px) rotate(' + (Math.sin(rt.age * 0.7) * 2).toFixed(2) + 'deg) scale(0.72)';
+      const bob = Math.sin(rt.age * 1.1) * 3 + Math.sin(rt.age * 2.3) * 1.2;
+      const cx = W * 0.07;                    // capsula in primo piano, leggermente a destra
+      E.capsule.style.transform = 'translate(-50%,-50%) translate(' + cx.toFixed(0) + 'px,' +
+        (hy - H / 2 + 34 + bob).toFixed(1) + 'px) rotate(' + (Math.sin(rt.age * 0.7) * 1.5).toFixed(2) +
+        'deg) scale(0.62)';
       E.capsule.style.filter = 'brightness(0.96) drop-shadow(0 6px 18px rgba(0,0,0,0.5))';
-      if (rt.age < 3.2) this._splashRing(ctx, W / 2, hy + bob, rt.age);
+      if (rt.age < 3.2) this._splashRing(ctx, W / 2 + cx, hy + 34 + bob, rt.age);
       const beats = [6, 16, 28, 44];
       while (rt.beat < beats.length - 1 && rt.age >= beats[rt.beat + 1]) { rt.beat++; this.onBeat(rt.beat, sim); }
-      if (rt.beat >= 0 && E.ship) {
-        const a = Math.min(1, (rt.age - beats[0]) / 4);
+      if (rt.beat >= 0 && E.ship) {           // la nave arriva di poppa e resta sull'orizzonte
+        const a = Math.min(1, (rt.age - beats[0]) / 5);
+        const ease = 1 - Math.pow(1 - a, 3);
         E.ship.style.display = ''; E.ship.style.opacity = a.toFixed(2);
-        E.ship.style.transform = 'translate(-50%,-50%) translateY(' + (hy - H / 2 + 18 - a * 10).toFixed(0) + 'px) scale(' + (0.7 + 0.25 * a).toFixed(2) + ')';
+        E.ship.style.transform = 'translate(-50%,-50%) translate(' + (-W * 0.3 + ease * W * 0.16).toFixed(0) +
+          'px,' + (hy - H / 2 + 4 + Math.sin(rt.age * 0.9) * 2).toFixed(0) + 'px) scale(' +
+          (1.05 + 0.15 * ease).toFixed(2) + ')';
       }
-      if (rt.beat >= 1 && E.heli) {
-        const p = Math.min(1, (rt.age - beats[1]) / 5);
+      if (rt.beat >= 1 && E.heli) {           // l'elicottero scende da destra sulla capsula
+        const p = Math.min(1, (rt.age - beats[1]) / 6);
+        const ease = 1 - Math.pow(1 - p, 2);
         E.heli.style.display = ''; E.heli.style.opacity = p.toFixed(2);
-        E.heli.style.transform = 'translate(-50%,-50%) translate(' + (W * 0.26 - p * W * 0.1).toFixed(0) + 'px,' +
-          (-H * 0.3 + p * H * 0.28 + Math.sin(rt.age * 6) * 2).toFixed(0) + 'px) scale(' + (0.5 + 0.5 * p).toFixed(2) + ')';
+        E.heli.style.transform = 'translate(-50%,-50%) translate(' + (W * 0.3 - ease * W * 0.1).toFixed(0) + 'px,' +
+          (-H * 0.3 + ease * H * 0.2 + Math.sin(rt.age * 6) * 2).toFixed(0) + 'px) scale(' +
+          (0.42 + 0.2 * ease).toFixed(2) + ')';
       }
       if (rt.beat >= 3) this._missionCard(ctx, W, H, sim, rt);
     }
@@ -479,6 +486,8 @@ export class Cockpit {
     if (ok) { E.capsule.src = which.src; E.capsule.style.display = ''; }
     else E.capsule.style.display = 'none';
     if (E.plate) E.plate.style.display = 'none';
+    if (E.ship && sp.ship && sp.ship.complete && sp.ship.naturalWidth) E.ship.src = sp.ship.src;
+    if (E.heli && sp.heli && sp.heli.complete && sp.heli.naturalWidth) E.heli.src = sp.heli.src;
     if (E.ship) E.ship.style.display = 'none';
     if (E.heli) E.heli.style.display = 'none';
     const v = this._ensureSeaVideo(E);
@@ -497,7 +506,7 @@ export class Cockpit {
       v.style.display = 'none';
       v.addEventListener('canplay', () => { this._seaOk = true; });
       v.addEventListener('error', () => { this._seaOk = false; this._seaVideo = false; });
-      E.vp.insertBefore(v, E.overlay);
+      E.vp.insertBefore(v, E.plate || E.overlay);
       v.play().then(() => { this._seaVideo = v; }).catch(() => { this._seaVideo = false; });
       if (this._seaVideo !== false) this._seaVideo = v;
     } catch (err) { this._seaVideo = false; }
@@ -1464,7 +1473,7 @@ export class Hud {
     if (E.qheat) {
       const kw = sim.qHeat / 1000;
       E.qheat.textContent = inRet && sim.qHeat > 0 ? kw.toFixed(1) + ' kW/m²' : '—';
-      E.qheat.className = 'val ' + (kw > 120 ? 'bad' : kw > 40 ? 'hl' : kw > 0 ? 'good' : '');
+      E.qheat.className = 'val ' + (kw > 10 ? 'bad' : kw > 4 ? 'hl' : kw > 0 ? 'good' : '');
     }
     if (E.chute) {
       E.chute.textContent = sim.chuteStage === 'main' ? 'PRINCIPALI \u00d7 4' : sim.chuteStage === 'drogue' ? 'DROGA' : '—';

@@ -91,7 +91,9 @@ Meridionale, con nave ed elicottero di recupero.
 ## Documentazione
 
 `MANUALE_CISLUNAR_2030.docx` è il manuale completo di missione e di fisica.
-`LEGGIMI_WINDOWS.txt` le istruzioni di avvio su Windows.
+Il gioco è pubblicato e giocabile online su
+<https://amxstudiohub.github.io/viaggio-sulla-luna/>: basta un browser, zero installazioni.
+Per lavorarci in locale: `python3 -m http.server 8137` (o `node tools/nocache_server.mjs`) nella cartella.
 
 ---
 
