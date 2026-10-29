@@ -1002,167 +1002,11 @@
    "sha": "67e637029838",
    "text": "Mid-course correction: perigee updated with a small trajectory impulse."
   },
-  "it.f11_entry": {
-   "f": "assets/audio/comms/it_f11_entry.mp3",
-   "ms": 6744,
-   "sha": "6b21dc9611d7",
-   "text": "Interfaccia atmosferica. Bank one: presento lo scudo con portanza, punto a rimbalzare fuori."
-  },
-  "en.f11_entry": {
-   "f": "assets/audio/comms/en_f11_entry.mp3",
-   "ms": 5856,
-   "sha": "470cfc0a94e5",
-   "text": "Entry interface. Bank one: presenting the shield with lift, aiming to skip back out."
-  },
-  "it.f11_skip@1_0": {
-   "f": "assets/audio/comms/it_f11_skip_1_0.mp3",
-   "ms": 10080,
-   "sha": "def022b000d8",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale uno g."
-  },
-  "en.f11_skip@1_0": {
-   "f": "assets/audio/comms/en_f11_skip_1_0.mp3",
-   "ms": 8760,
-   "sha": "48474c068e3e",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak one g."
-  },
-  "it.f11_skip@1_5": {
-   "f": "assets/audio/comms/it_f11_skip_1_5.mp3",
-   "ms": 10776,
-   "sha": "8bd2b2652b8b",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale uno virgola cinque g."
-  },
-  "en.f11_skip@1_5": {
-   "f": "assets/audio/comms/en_f11_skip_1_5.mp3",
-   "ms": 9408,
-   "sha": "9138b75cb0e2",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak one point five g."
-  },
-  "it.f11_skip@2_0": {
-   "f": "assets/audio/comms/it_f11_skip_2_0.mp3",
-   "ms": 10032,
-   "sha": "269dd5581cb6",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale due g."
-  },
-  "en.f11_skip@2_0": {
-   "f": "assets/audio/comms/en_f11_skip_2_0.mp3",
-   "ms": 8736,
-   "sha": "d225ad848a03",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak two g."
-  },
-  "it.f11_skip@2_5": {
-   "f": "assets/audio/comms/it_f11_skip_2_5.mp3",
-   "ms": 10800,
-   "sha": "c25038ea7972",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale due virgola cinque g."
-  },
-  "en.f11_skip@2_5": {
-   "f": "assets/audio/comms/en_f11_skip_2_5.mp3",
-   "ms": 9360,
-   "sha": "556b7554aeb5",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak two point five g."
-  },
-  "it.f11_skip@3_0": {
-   "f": "assets/audio/comms/it_f11_skip_3_0.mp3",
-   "ms": 10080,
-   "sha": "64f0cfa05f70",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale tre g."
-  },
-  "en.f11_skip@3_0": {
-   "f": "assets/audio/comms/en_f11_skip_3_0.mp3",
-   "ms": 8832,
-   "sha": "527ef24e7fee",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak three g."
-  },
-  "it.f11_skip@3_5": {
-   "f": "assets/audio/comms/it_f11_skip_3_5.mp3",
-   "ms": 10752,
-   "sha": "977957953690",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale tre virgola cinque g."
-  },
-  "en.f11_skip@3_5": {
-   "f": "assets/audio/comms/en_f11_skip_3_5.mp3",
-   "ms": 9408,
-   "sha": "debb82a3460a",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak three point five g."
-  },
-  "it.f11_skip@4_0": {
-   "f": "assets/audio/comms/it_f11_skip_4_0.mp3",
-   "ms": 10224,
-   "sha": "19ad6098fe11",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale quattro g."
-  },
-  "en.f11_skip@4_0": {
-   "f": "assets/audio/comms/en_f11_skip_4_0.mp3",
-   "ms": 8760,
-   "sha": "9aaa2a3a80ed",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak four g."
-  },
-  "it.f11_skip@4_5": {
-   "f": "assets/audio/comms/it_f11_skip_4_5.mp3",
-   "ms": 10944,
-   "sha": "e970bc333a62",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale quattro virgola cinque g."
-  },
-  "en.f11_skip@4_5": {
-   "f": "assets/audio/comms/en_f11_skip_4_5.mp3",
-   "ms": 9384,
-   "sha": "f2001f135932",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak four point five g."
-  },
-  "it.f11_skip@5_0": {
-   "f": "assets/audio/comms/it_f11_skip_5_0.mp3",
-   "ms": 10224,
-   "sha": "ceb246c1655b",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale cinque g."
-  },
-  "en.f11_skip@5_0": {
-   "f": "assets/audio/comms/en_f11_skip_5_0.mp3",
-   "ms": 8832,
-   "sha": "29c0e61176aa",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak five g."
-  },
-  "it.f11_skip@5_5": {
-   "f": "assets/audio/comms/it_f11_skip_5_5.mp3",
-   "ms": 11016,
-   "sha": "c18d4ad9ee2c",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale cinque virgola cinque g."
-  },
-  "en.f11_skip@5_5": {
-   "f": "assets/audio/comms/en_f11_skip_5_5.mp3",
-   "ms": 9456,
-   "sha": "3088045a2e4c",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak five point five g."
-  },
-  "it.f11_skip@6_0": {
-   "f": "assets/audio/comms/it_f11_skip_6_0.mp3",
-   "ms": 10104,
-   "sha": "ea42113c02d4",
-   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. Picco attuale sei g."
-  },
-  "en.f11_skip@6_0": {
-   "f": "assets/audio/comms/en_f11_skip_6_0.mp3",
-   "ms": 8808,
-   "sha": "7ddcfb49eb0c",
-   "text": "Skip successful. We bounced off the atmosphere: the skip apogee will bleed more energy on the next entry. Current peak six g."
-  },
-  "it.f11_chutes": {
-   "f": "assets/audio/comms/it_f11_chutes.mp3",
-   "ms": 3264,
-   "sha": "9b7bb721c2bd",
-   "text": "Paracadute aperti: frenamento finale verso l'ammaraggio."
-  },
-  "en.f11_chutes": {
-   "f": "assets/audio/comms/en_f11_chutes.mp3",
-   "ms": 3384,
-   "sha": "f4b00c5444f4",
-   "text": "Chutes deployed: final deceleration toward splashdown."
-  },
   "it.mission_complete": {
    "f": "assets/audio/comms/it_mission_complete.mp3",
-   "ms": 11208,
-   "sha": "63b9ccd26ec1",
-   "text": "Ammaraggio. La capsula ha completato il treno di rimbalzi atmosferici e dissipato l'energia di ritorno. Missione completa: dalla LEO alla superficie lunare e ritorno."
+   "ms": 11352,
+   "sha": "bf501ca99495",
+   "text": "Ammaraggio. La capsula ha dissipato l'energia di ritorno attraversando l'atmosfera e ha ammarato in sicurezza. Missione completa: dalla LEO alla superficie lunare e ritorno."
   },
   "en.mission_complete": {
    "f": "assets/audio/comms/en_mission_complete.mp3",
@@ -1241,6 +1085,222 @@
    "ms": 8424,
    "sha": "5f460e9e7565",
    "text": "Fault: Raptor number two offline: thrust down to fifty percent. The PID compensates the attitude, the landing continues."
+  },
+  "it.f11_coast": {
+   "f": "assets/audio/comms/it_f11_coast.mp3",
+   "ms": 8304,
+   "sha": "819ddf234d60",
+   "text": "Crociera di ritorno. Fuori dalla sfera d'influenza lunare, in caduta verso la Terra: tengo la rotta con le correzioni a metà crociera."
+  },
+  "en.f11_coast": {
+   "f": "assets/audio/comms/en_f11_coast.mp3",
+   "ms": 7464,
+   "sha": "447a03680083",
+   "text": "Return coast. Out of the Moon's sphere of influence, falling toward Earth: holding the corridor with mid-course corrections."
+  },
+  "it.f11_sm_jettison": {
+   "f": "assets/audio/comms/it_f11_sm_jettison.mp3",
+   "ms": 8376,
+   "sha": "fd64d2c65bbd",
+   "text": "Sgancio del modulo di servizio. Lo stadio di spinta si allontana su una traiettoria propria: da qui comanda solo lo scudo termico."
+  },
+  "en.f11_sm_jettison": {
+   "f": "assets/audio/comms/en_f11_sm_jettison.mp3",
+   "ms": 6768,
+   "sha": "b1e28d55aae1",
+   "text": "Service module jettison. The pusher module is on its own trajectory: from here only the heat shield matters."
+  },
+  "it.f12_entry": {
+   "f": "assets/audio/comms/it_f12_entry.mp3",
+   "ms": 9672,
+   "sha": "78fd97ebeb34",
+   "text": "Rientro. All'interfaccia presenterò lo scudo con portanza: un solo rimbalzo sull'atmosfera, come un sasso piatto, senza superare i sei g."
+  },
+  "en.f12_entry": {
+   "f": "assets/audio/comms/en_f12_entry.mp3",
+   "ms": 8472,
+   "sha": "7bf4b662cfda",
+   "text": "Entry. At the interface I will present the shield with lift: one skip off the atmosphere, like a flat stone, staying under six g."
+  },
+  "it.f12_interface": {
+   "f": "assets/audio/comms/it_f12_interface.mp3",
+   "ms": 8184,
+   "sha": "4d8312a6c976",
+   "text": "Interfaccia atmosferica: cento chilometri, undici chilometri al secondo. Bank one: punto a rimbalzare una volta sola."
+  },
+  "en.f12_interface": {
+   "f": "assets/audio/comms/en_f12_interface.mp3",
+   "ms": 7344,
+   "sha": "c55e3417278f",
+   "text": "Entry interface: one hundred kilometres, eleven kilometres per second. Bank one: aiming for a single skip."
+  },
+  "it.f12_peakq": {
+   "f": "assets/audio/comms/it_f12_peakq.mp3",
+   "ms": 6192,
+   "sha": "8f5c4959095c",
+   "text": "Picco termico superato. Lo scudo ablativo ha fatto il suo lavoro e il flusso di calore sta calando."
+  },
+  "en.f12_peakq": {
+   "f": "assets/audio/comms/en_f12_peakq.mp3",
+   "ms": 5352,
+   "sha": "4eecfa178681",
+   "text": "Peak heating behind us. The ablative shield did its job and the heat flux is falling."
+  },
+  "it.f12_blackout_in": {
+   "f": "assets/audio/comms/it_f12_blackout_in.mp3",
+   "ms": 8376,
+   "sha": "33fd35cccb30",
+   "text": "Blackout di plasma. La ionizzazione rimbalza le onde radio: nessun telemetro per qualche minuto, l'autopilota prosegue da solo."
+  },
+  "en.f12_blackout_in": {
+   "f": "assets/audio/comms/en_f12_blackout_in.mp3",
+   "ms": 7848,
+   "sha": "bd8d4af8b46c",
+   "text": "Plasma blackout. Ionisation is bouncing the radio waves: no telemetry for a few minutes, the autopilot flies on."
+  },
+  "it.f12_blackout_out": {
+   "f": "assets/audio/comms/it_f12_blackout_out.mp3",
+   "ms": 6096,
+   "sha": "ca7ded779856",
+   "text": "Blackout terminato. Radio di nuovo in ascolto: siamo lanciati verso il secondo ingresso."
+  },
+  "en.f12_blackout_out": {
+   "f": "assets/audio/comms/en_f12_blackout_out.mp3",
+   "ms": 4800,
+   "sha": "ce47105df583",
+   "text": "Blackout over. Radio is back: we are falling toward the second entry."
+  },
+  "it.f12_peakg": {
+   "f": "assets/audio/comms/it_f12_peakg.mp3",
+   "ms": 6720,
+   "sha": "a07551c683d5",
+   "text": "Picco di decelerazione: quattro g all'equipaggio, limite di progetto sei g. Tutto nei parametri."
+  },
+  "en.f12_peakg": {
+   "f": "assets/audio/comms/en_f12_peakg.mp3",
+   "ms": 6504,
+   "sha": "cc15b97f236e",
+   "text": "Peak deceleration: four g for the crew, six g design limit. Everything within parameters."
+  },
+  "it.f12_skip": {
+   "f": "assets/audio/comms/it_f12_skip.mp3",
+   "ms": 7032,
+   "sha": "cc73571e1f6e",
+   "text": "Skip riuscito. Abbiamo rimbalzato sull'atmosfera: il secondo ingresso sarà più ripido e chiuderà il lavoro."
+  },
+  "en.f12_skip": {
+   "f": "assets/audio/comms/en_f12_skip.mp3",
+   "ms": 6192,
+   "sha": "881d68c41a47",
+   "text": "Skip successful. We bounced off the atmosphere: the second entry will be steeper and finish the job."
+  },
+  "it.f12_recall": {
+   "f": "assets/audio/comms/it_f12_recall.mp3",
+   "ms": 7608,
+   "sha": "690ca6875410",
+   "text": "Richiamo di emergenza. Il rimbalzo ci ha lasciati troppo in alto: impulso retrogrado per forzare il secondo ingresso."
+  },
+  "en.f12_recall": {
+   "f": "assets/audio/comms/en_f12_recall.mp3",
+   "ms": 6072,
+   "sha": "c0519366fbd0",
+   "text": "Emergency recall. The skip left us too high: retrograde burn to force the second entry."
+  },
+  "it.f13_drogue": {
+   "f": "assets/audio/comms/it_f13_drogue.mp3",
+   "ms": 5904,
+   "sha": "badbdb4ca127",
+   "text": "Paracadute di frenazione aperti. Botto della droga: la capsula ruota a scudo in giù."
+  },
+  "en.f13_drogue": {
+   "f": "assets/audio/comms/en_f13_drogue.mp3",
+   "ms": 4968,
+   "sha": "fee1418e3267",
+   "text": "Drogue chutes deployed. Drogue fire: the capsule rotates shield down."
+  },
+  "it.f13_mains": {
+   "f": "assets/audio/comms/it_f13_mains.mp3",
+   "ms": 5208,
+   "sha": "8d546840ad71",
+   "text": "Paracadute principali: quattro calotte. L'oceano è proprio sotto di noi."
+  },
+  "en.f13_mains": {
+   "f": "assets/audio/comms/en_f13_mains.mp3",
+   "ms": 4488,
+   "sha": "572408fa55d3",
+   "text": "Main chutes: four canopies. The ocean is right below us."
+  },
+  "it.f13_thousand": {
+   "f": "assets/audio/comms/it_f13_thousand.mp3",
+   "ms": 5832,
+   "sha": "000f809e295e",
+   "text": "Mille piedi. Assetto di impatto, scudo in giù, equipaggio in posizione."
+  },
+  "en.f13_thousand": {
+   "f": "assets/audio/comms/en_f13_thousand.mp3",
+   "ms": 4728,
+   "sha": "e723feed4619",
+   "text": "Thousand feet. Impact attitude, shield down, crew braced."
+  },
+  "it.rec_splash": {
+   "f": "assets/audio/comms/it_rec_splash.mp3",
+   "ms": 6792,
+   "sha": "569110ff8a07",
+   "text": "Ammaraggio confermato. La capsula galleggia, scudo in giù. Equipaggio integro."
+  },
+  "en.rec_splash": {
+   "f": "assets/audio/comms/en_rec_splash.mp3",
+   "ms": 6312,
+   "sha": "712332b84a33",
+   "text": "Splashdown confirmed. The capsule is floating, shield down. Crew intact."
+  },
+  "it.rec_ship": {
+   "f": "assets/audio/comms/it_rec_ship.mp3",
+   "ms": 6072,
+   "sha": "b7cca29936dd",
+   "text": "Nave di recupero in vista. Il portellone di poppa è aperto e la capsula ondeggia a cinquanta metri."
+  },
+  "en.rec_ship": {
+   "f": "assets/audio/comms/en_rec_ship.mp3",
+   "ms": 5664,
+   "sha": "12fc9d289621",
+   "text": "Recovery ship in sight. The stern ramp is open and the capsule is bobbing fifty metres out."
+  },
+  "it.rec_heli": {
+   "f": "assets/audio/comms/it_rec_heli.mp3",
+   "ms": 7248,
+   "sha": "bfdf4d7cbb43",
+   "text": "Elicottero di recupero in discesa: sei metri sopra la capsula, il rotore alza acqua. Nuotatori in mare."
+  },
+  "en.rec_heli": {
+   "f": "assets/audio/comms/en_rec_heli.mp3",
+   "ms": 6984,
+   "sha": "6f1368bf5a17",
+   "text": "Recovery helicopter descending: six metres above the capsule, rotor beating up the water. Swimmers in the sea."
+  },
+  "it.rec_hatch": {
+   "f": "assets/audio/comms/it_rec_hatch.mp3",
+   "ms": 7536,
+   "sha": "b5ca2b8b71bd",
+   "text": "Portello aperto. Equipaggio in sicurezza: quattro taikonauti salutano. Missione completata."
+  },
+  "en.rec_hatch": {
+   "f": "assets/audio/comms/en_rec_hatch.mp3",
+   "ms": 5568,
+   "sha": "c6b7e65f4e94",
+   "text": "Hatch open. Crew safe: four taikonauts wave. Mission complete."
+  },
+  "it.rec_done": {
+   "f": "assets/audio/comms/it_rec_done.mp3",
+   "ms": 5280,
+   "sha": "9789bfaf1a30",
+   "text": "Missione completata: dalla LEO alla superficie lunare, e ritorno fino al recupero in mare."
+  },
+  "en.rec_done": {
+   "f": "assets/audio/comms/en_rec_done.mp3",
+   "ms": 5136,
+   "sha": "7c83bd070065",
+   "text": "Mission complete: from low Earth orbit to the lunar surface, and back to the recovery at sea."
   }
  }
 }

@@ -77,10 +77,16 @@ node tests/spacex.test.mjs     # HLS: atterraggio ~2,1 g max
 node tests/comms.test.mjs      # copione radio, numeri a parole, manifest clip
 ```
 
-Struttura: `core/physics.js` (CR3BP, staging) · `systems/autopilot.js` (fasi F1→F11) ·
+Struttura: `core/physics.js` (CR3BP, staging, modello di rientro con atmosfera reale) ·
+`systems/autopilot.js` (fasi F1→F13: crociera, rientro a skip, ammaraggio) ·
 `systems/descent.js` (GNC PID e glide-slope) · `systems/planner.js` (TimeWarp, maneuver node) ·
 `systems/audio_comms.js` (radio e audio procedurale) · `ui/cockpit.js` (tactical + cinematiche) ·
 `data/` (specifiche veicoli, copione radio, manifest).
+
+La scena terminale è una cinematica dedicata: interfaccia atmosferica a 100 km a 11 km/s,
+un rimbalzo vero sull'atmosfera (skip), blackout di plasma, picco di decelerazione,
+paracadute di frenazione e quattro calotte principali fino all'ammaraggio nel Mar Cinese
+Meridionale, con nave ed elicottero di recupero.
 
 ## Documentazione
 

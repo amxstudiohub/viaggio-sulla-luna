@@ -163,6 +163,9 @@ export const MISSIONS = {
     },
     boilOffRate: 0,
     chutes: true, // paracadute impliciti per il rientro del complesso Mengzhou
+    // Capsula di rientro Mengzhou (modulo di ritorno): 5,6 t a secco. Dopo lo
+    // sgancio del modulo di servizio è lei che attraversa l'atmosfera e ammarra.
+    returnModule: { name: 'Capsula Mengzhou', mass: 5600, CdA: 210, splash: 'Mar Cinese Meridionale' },
     orbiterMarker: { name: 'Mengzhou', body: 'moon', altitude: 200e3 / SCALE, color: '#7cffb2' }, // 20 km scalati = 200 km reali
     initialOrbit: { body: 'earth', altitude: ASTRO.leo.altitude },
     stagingHint: 'X = getta Modulo Propulsione (crasher)',

@@ -1,7 +1,7 @@
 {
- "when": "2026-10-22T22:05:26.525Z",
+ "when": "2026-10-29T14:02:35.794Z",
  "missions": "CNSA,SPACEX",
- "n": 57,
+ "n": 83,
  "entries": [
   {
    "phase": "ANOMALIA",
@@ -25,7 +25,7 @@
   },
   {
    "phase": "F10 COMPLETATA",
-   "text": "Corridoio di rientro agganciato: perigeo 1 km dopo 2 impulsi di correzione. Buena suerte."
+   "text": "Corridoio di rientro agganciato: perigeo 6 km dopo 20 impulsi di correzione. Buena suerte."
   },
   {
    "phase": "F10 INIEZIONE TERRA",
@@ -37,11 +37,83 @@
   },
   {
    "phase": "F10",
-   "text": "Correzione a metà crociera n.1: perigeo -0 km -> impulso di 0.29 m/s prograde."
+   "text": "Correzione a metà crociera n.1: perigeo -0 km -> impulso di 0.41 m/s prograde."
   },
   {
    "phase": "F10",
-   "text": "Correzione a metà crociera n.2: perigeo 1 km -> impulso di 0.24 m/s prograde."
+   "text": "Correzione a metà crociera n.10: perigeo 5 km -> impulso di 0.04 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.11: perigeo 5 km -> impulso di 0.02 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.12: perigeo 6 km -> impulso di 0.01 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.13: perigeo 6 km -> impulso di -0.01 m/s retrograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.14: perigeo 6 km -> impulso di 0.01 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.15: perigeo 6 km -> impulso di -0.01 m/s retrograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.16: perigeo 6 km -> impulso di 0.01 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.17: perigeo 6 km -> impulso di -0.01 m/s retrograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.18: perigeo 6 km -> impulso di 0.01 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.19: perigeo 6 km -> impulso di -0.01 m/s retrograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.2: perigeo 1 km -> impulso di 0.35 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.20: perigeo 6 km -> impulso di 0.01 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.3: perigeo 2 km -> impulso di 0.28 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.4: perigeo 3 km -> impulso di 0.23 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.5: perigeo 3 km -> impulso di 0.18 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.6: perigeo 4 km -> impulso di 0.14 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.7: perigeo 4 km -> impulso di 0.11 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.8: perigeo 5 km -> impulso di 0.08 m/s prograde."
+  },
+  {
+   "phase": "F10",
+   "text": "Correzione a metà crociera n.9: perigeo 5 km -> impulso di 0.06 m/s prograde."
   },
   {
    "phase": "F10",
@@ -56,20 +128,52 @@
    "text": "TEI completata. Tra 3 ore di crociera valuterò la traiettoria coll'imbarcazione reale e correggerò il perigeo con micro-impulsi."
   },
   {
-   "phase": "F11 RIENTRO SKIP",
-   "text": "FASE 11 — RIENTRO SKIP: all'interfaccia atmosferica (100 km reali = 10 km scalati) orienterò la capsula con portanza verso l'alto (bank 1) sotto gli 8 km: la capsula SBANDERÀ sull'atmosfera come un sasso piatto, dissipando energia a ogni rimbalzo senza superare i 6 g d'equipaggio. Poi paracadute e ammaraggio."
+   "phase": "F11 CRUCIERA TERRA",
+   "text": "FASE 11 — CROCIERA DI RITORNO: siamo fuori dalla sfera d'influenza lunare e cadiamo verso la Terra. Tengo la rotta con le correzioni a metà crociera e sgancio il modulo di servizio poco prima dell'atmosfera: da lì comanda solo lo scudo termico."
   },
   {
    "phase": "F11",
-   "text": "INTERFACCIA ATMOSFERICA: v = 3508 m/s. Bank 1: presento lo scudo con portanza — punto a RIMBALZARE fuori (skip)."
+   "text": "SGANCIO MODULO DI SERVIZIO: lo stadio di spinta si allontana su una traiettoria propria. Da qui in poi siamo la sola capsula di rientro, 5.6 tonnellate con lo scudo termico rivolto al flusso."
   },
   {
-   "phase": "F11",
-   "text": "PARACADUTE aperti: frenamento finale verso l'ammaraggio."
+   "phase": "F12 RIENTRO",
+   "text": "FASE 12 — RIENTRO: all'interfaccia atmosferica (100 km reali) presenterò lo scudo con un bank angle per guadagnare portanza: un solo rimbalzo sull'atmosfera come un sasso piatto, per dissipare energia senza superare i 6 g d'equipaggio. Poi discesa balistica, paracadute, ammaraggio."
   },
   {
-   "phase": "F11",
-   "text": "SKIP RIUSCITO ✔ Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. G max finora 4.8."
+   "phase": "F12",
+   "text": "BLACKOUT DI PLASMA: la ionizzazione attorno alla capsula rimbalza le onde radio. Nessun telemetro per qualche minuto, l'autopilota prosegue da solo."
+  },
+  {
+   "phase": "F12",
+   "text": "BLACKOUT TERMINATO: radio di nuovo in ascolto. Velocità 4475 m/s reali, quota 48486 m."
+  },
+  {
+   "phase": "F12",
+   "text": "BLACKOUT TERMINATO: radio di nuovo in ascolto. Velocità 8226 m/s reali, quota 90115 m."
+  },
+  {
+   "phase": "F12",
+   "text": "INTERFACCIA ATMOSFERICA: quota 100 km, velocità 11095 m/s reali. Bank 1: presento lo scudo con portanza, punto a rimbalzare una volta sola."
+  },
+  {
+   "phase": "F12",
+   "text": "PICCO DI DECELERAZIONE: 4.2 g all'equipaggio, limite di progetto 6 g. Tutto nei parametri."
+  },
+  {
+   "phase": "F12",
+   "text": "SKIP RIUSCITO ✔ Abbiamo rimbalzato sull'atmosfera: il secondo ingresso sarà più ripido e chiuderà il lavoro. G max finora 3.8."
+  },
+  {
+   "phase": "F13",
+   "text": "Mille piedi: 10 m/s. Assetto di impatto, scudo in giù, equipaggio in posizione."
+  },
+  {
+   "phase": "F13",
+   "text": "PARACADUTE DI FRENAZIONE aperti a 7552 m reali, 100 m/s: la capsula ruota a scudo in giù."
+  },
+  {
+   "phase": "F13",
+   "text": "PARACADUTE PRINCIPALI: quattro calotte a 2967 m, velocità 54 m/s. L'oceano è proprio sotto di noi."
   },
   {
    "phase": "F2 ACCENSIONE TLI",
@@ -221,7 +325,7 @@
   },
   {
    "phase": "MISSIONE COMPLETATA",
-   "text": "AMMARAGGIO ✔ La capsula ha completato il treno di rimbalzi atmosferici, dissipato l'energia di ritorno (picco 4.8 g, limite 6 g) e ammarinato in sicurezza. Missione completa: dalla LEO alla superficie lunare e ritorno. Premi V per il comando manuale, 0 per ripetere la demo."
+   "text": "AMMARAGGIO ✔ La capsula ha dissipato l'energia di ritorno attraversando l'atmosfera, con un picco di 5.3 g (limite 6 g), e ha ammarato in sicurezza. Missione completa: dalla LEO alla superficie lunare e ritorno. Recupero in mare in corso."
   },
   {
    "phase": "SISTEMA",

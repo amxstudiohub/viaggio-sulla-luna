@@ -84,10 +84,69 @@ export function rk4Step(s, dt, accel) {
 /**
  * Atmosfera semplificata per il rientro: densità esponenziale con quota di
  * scala H e top a 10 km scalati (= 100 km reali). CdA/ClA sono coefficienti
- * balistici di gioco tarati per far funzionare lo skip re-entry alla
- * velocità scalata (~3.5 km/s), con paracadute impliciti sotto i 5 km.
+ * balistici di gioco tarati per far funzionare lo skip re-entry.
+ *
+ * SCALA (importante per il rientro): il mondo è 1:10 nelle LUNGHEZZE, con TEMPO
+ * REALE e g di superficie reale. Le accelerazioni sono quindi già reali, mentre
+ *     v_reale = v_sim × √10 (= 3,162)   e   h_reale = h_sim × 10.
+ * Tutte le soglie del rientro — e i numeri narrati/mostrati — usano i VALORI
+ * REALI convertiti: è l'unico modo di avere ~11 km/s all'interfaccia, ~440 m/s
+ * all'apertura della droga e ~8,5 m/s all'ammaraggio.
  */
-export const ATM = { top: 10e3, rho0: 0.03, H: 2.0e3, CdA: 10, ClA: 30 };
+export const ALT_REAL = ASTRO.scale;
+export const V_REAL = Math.sqrt(ASTRO.scale);
+export const hReal = (h) => h * ALT_REAL;   // m di sim  → m reali
+export const vReal = (v) => v * V_REAL;     // m/s sim   → m/s reali
+export const hSim = (h) => h / ALT_REAL;    // m reali  → m di sim
+export const vSim = (v) => v / V_REAL;      // m/s reali → m/s di sim
+
+export const ATM = {
+  // Atmosfera REALE (tabella US Standard Atmosphere, interpolazione log-lineare):
+  // con v_sim = v_reale/√10 i coefficienti balistici vanno ×10 rispetto al reale
+  // perché le accelerazioni di sim sono già reali (CdA capsula reale ≈ 21 → 210).
+  top: 10e3, rho0: 1.225, H: 850, CdA: 210, ClA: 35,
+  drogueH: 7600, drogueV: 520,   // apertura droga: quota e velocità REALI
+  mainH: 3000, mainV: 140,       // apertura principali: quota e velocità REALI
+  splashV: 12,                   // m/s reali: sotto è ammaraggio, sopra è impatto
+  maxG: 6,                       // decelerazione massima sotto paracadute
+  qRef: 120000,                  // flusso termico di riferimento (W/m² reali)
+  // Volo paracadutato: quota reale → velocità terminale reale.
+  terminal: [[7600, 470], [5000, 160], [3000, 70], [1500, 22], [0, 8.5]],
+};
+
+/** Densità [kg/m³] per quota REALE [m] — US Standard Atmosphere (tabella). */
+export const RHO_TABLE = [
+  [0, 1.225], [5e3, 0.7364], [1e4, 0.4135], [1.5e4, 0.1948], [2e4, 0.08891],
+  [2.5e4, 0.04008], [3e4, 0.01841], [4e4, 0.003996], [5e4, 0.001027],
+  [6e4, 3.097e-4], [7e4, 8.283e-5], [8e4, 1.846e-5], [9e4, 3.396e-6],
+  [1e5, 5.604e-7], [1.4e5, 5.0e-9],
+];
+
+/** Densità dell'atmosfera a una quota DI SIM (converte lei la quota in reale). */
+export function rhoAtm(altSim) {
+  const h = hReal(altSim);
+  if (h <= 0) return RHO_TABLE[0][1];
+  const T = RHO_TABLE;
+  if (h > T[T.length - 1][0]) return 0;
+  for (let i = 1; i < T.length; i++) {
+    if (h <= T[i][0]) {
+      const [h0, r0] = T[i - 1], [h1, r1] = T[i];
+      return r0 * Math.pow(r1 / r0, (h - h0) / (h1 - h0));
+    }
+  }
+  return 0;
+}
+
+/** Velocità terminale reale (m/s) dei paracadute alla quota reale data. */
+export function chuteTerminal(hR) {
+  const T = ATM.terminal;                       // quote decrescenti
+  if (hR >= T[0][0]) return T[0][1];
+  for (let i = 0; i < T.length - 1; i++) {
+    const [hA, vA] = T[i], [hB, vB] = T[i + 1];
+    if (hR >= hB) return vB + (vA - vB) * (hR - hB) / (hA - hB);
+  }
+  return T[T.length - 1][1];
+}
 
 /* ---------------- Utilità cinematiche ---------------- */
 
@@ -127,6 +186,12 @@ export class Sim {
     this.gLoad = 0; this.gMax = 0;
     this.landed = null;          // offset rigido dalla Luna quando TOUCHDOWN
     this.chutes = false;
+    this.chuteStage = null;        // null | 'drogue' | 'main'
+    this.qHeat = 0;                // flusso termico di gioco (½ρv², scala qRef)
+    this.blackout = false;         // blackout da plasma in alto
+    this.atmIngressi = 0;          // quante volte è entrata in atmosfera
+    this.smJettisoned = false;     // modulo di servizio sganciato
+    this._wasAtm = false;
 
     // stato nave
     const r = astro.earth.radius + mission.initialOrbit.altitude;
@@ -231,6 +296,37 @@ export class Sim {
     return true;
   }
 
+  /** Coefficiente balistico di gioco: dopo lo sgancio del modulo di servizio
+   *  la nave è solo la capsula di rientro (area e massa cambiano). */
+  cdA() {
+    const rm = this.mission.returnModule;
+    return this.smJettisoned && rm && rm.CdA ? rm.CdA : ATM.CdA;
+  }
+
+  /**
+   * Sgancio del modulo di servizio prima del rientro (~12 min reali prima
+   * dell'interfaccia atmosferica): resta la sola capsula di rientro.
+   */
+  jettisonSM() {
+    if (this.smJettisoned) return false;
+    const rm = this.mission.returnModule;
+    if (!rm) return false;
+    const mPrima = this.mass;
+    this.smJettisoned = true;
+    const st = this.activeStage;
+    if (st) {
+      this.debris.push({
+        name: st.name + ' (SM)', x: this.ship.x, y: this.ship.y,
+        vx: this.ship.vx, vy: this.ship.vy,
+        mass: st.dryMass + st.propellant, trail: [], dead: false,
+      });
+      st.dryMass = rm.mass; st.propellant = 0; st.groups = [];
+    }
+    this.log('SGANCIO MODULO DI SERVIZIO — ' + (mPrima / 1e3).toFixed(1) + ' t → '
+      + (this.mass / 1e3).toFixed(1) + ' t: resta la sola capsula di rientro', 'stage');
+    return true;
+  }
+
   /** Un passo di fisica (dt fisso, es. 0.1 s). */
   step(dt) {
     if (this.status === 'TOUCHDOWN') { this._rideMoon(dt); this._stepDebris(dt); return; }
@@ -266,24 +362,48 @@ export class Sim {
     const rE0 = Math.hypot(s.x, s.y);
     const altE0 = rE0 - astro.earth.radius;
     const vNow = Math.hypot(s.vx, s.vy);
-    if (altE0 < ATM.top && altE0 > 0) {
-      const rho = ATM.rho0 * Math.exp(-altE0 / ATM.H);
+    const mNow = this.mass;
+    const inAtm = altE0 < ATM.top && altE0 > 0;
+    const rho = inAtm ? rhoAtm(altE0) : 0;
+    if (inAtm) {
       const q = 0.5 * rho * vNow;                        // ½ρv (×v = ½ρv²)
-      const m = this.mass;
-      const aD = q * ATM.CdA / m;
+      const aD = q * this.cdA() / mNow;
       dax -= aD * s.vx; day -= aD * s.vy;                // drag opposto a v
       if (this.bank > 0) {
         const ux = s.x / rE0, uy = s.y / rE0;            // radiale "up"
         let lx = -s.vy / (vNow || 1), ly = s.vx / (vNow || 1);
         if (lx * ux + ly * uy < 0) { lx = -lx; ly = -ly; }
-        const aL = q * ATM.ClA * this.bank * vNow / m; // ×v: portanza ~ ½ρv²·ClA/m
+        const aL = q * ATM.ClA * this.bank * vNow / mNow; // ×v: portanza ~ ½ρv²·ClA/m
         dax += aL * lx; day += aL * ly;                  // portanza perpendicolare a v
       }
     }
-    if (altE0 < 5e3 && vNow < 1300 && this.mission.chutes) {
-      if (!this.chutes) { this.chutes = true; this.log('PARACADUTE — apertura a ' + (altE0 / 1e3).toFixed(1) + ' km quota', 'info'); }
-      const aP = 15; // frenamento paracadute (droga+main)
-      dax -= aP * s.vx / (vNow || 1); day -= aP * s.vy / (vNow || 1);
+    // --- Indicatori termici per HUD, cinematica e radio ---
+    this.qHeat = inAtm ? rho * vNow * vNow * 5 : 0;   // ≈ ½ρv² in W/m² REALI
+    this.blackout = inAtm && vReal(vNow) > 4500 && hReal(altE0) < 90e3;
+    if (inAtm && !this._wasAtm) this.atmIngressi++;
+    this._wasAtm = inAtm;
+
+    // --- Paracadute: droga poi principali. Il volo paracadutato INSEGUE la
+    //     tabella di velocità terminali reali (vedi ATM.terminal) con
+    //     decelerazione limitata: è l'unico modo coerente, con la densità di
+    //     gioco, di avere ~440 m/s alla droga e ~8,5 m/s all'impatto. ---
+    if (this.mission.chutes && altE0 > 0) {
+      const hR = hReal(altE0), vR = vReal(vNow);
+      if (!this.chuteStage && hR < ATM.drogueH && vR < ATM.drogueV) {
+        this.chuteStage = 'drogue'; this.chutes = true;
+        this.log('PARACADUTE DI FRENAZIONE — aperti a ' + hR.toFixed(0) + ' m, ' + vR.toFixed(0) + ' m/s', 'info');
+      } else if (this.chuteStage === 'drogue' && hR < ATM.mainH && vR < ATM.mainV) {
+        this.chuteStage = 'main';
+        this.log('PARACADUTE PRINCIPALI — 4 calotte a ' + hR.toFixed(0) + ' m, ' + vR.toFixed(0) + ' m/s', 'success');
+      }
+      if (this.chuteStage) {
+        // Drag quadratico tarato: a = g·(v/vTerminale)², così il regime
+        // stabilito È la velocità terminale di tabella (bilancia già la gravità).
+        const vT = vSim(chuteTerminal(hR));
+        const k = G0 / (vT * vT);
+        const aP = Math.min(k * vNow * vNow, ATM.maxG * G0);
+        dax -= aP * s.vx / (vNow || 1); day -= aP * s.vy / (vNow || 1);
+      }
     }
     this.gLoad = Math.hypot(tax + dax, tay + day) / G0;
     if (this.gLoad > this.gMax) this.gMax = this.gLoad;
@@ -310,8 +430,8 @@ export class Sim {
     const dM = Math.hypot(mo.x - s.x, mo.y - s.y);
     if (dE <= astro.earth.radius) {
       const vRel = Math.hypot(s.vx, s.vy);
-      if (vRel < 150) { this.status = 'SPLASHDOWN'; this.log('AMMARAGGIO — rientro completato (v=' + vRel.toFixed(1) + ' m/s, G max ' + this.gMax.toFixed(1) + ')', 'success'); }
-      else { this.status = 'CRASHED'; this.log('IMPATTO — superficie TERRA (v=' + vRel.toFixed(0) + ' m/s)', 'danger'); }
+      if (vReal(vRel) < ATM.splashV) { this.status = 'SPLASHDOWN'; this.log('AMMARAGGIO — rientro completato (v=' + vReal(vRel).toFixed(1) + ' m/s reali, G max ' + this.gMax.toFixed(1) + ')', 'success'); }
+      else { this.status = 'CRASHED'; this.log('IMPATTO — superficie TERRA (v=' + vReal(vRel).toFixed(0) + ' m/s reali)', 'danger'); }
     } else if (dM <= astro.moon.radius + terrainHeight(Math.atan2(s.y - mo.y, s.x - mo.x))) {
       const vRel = Math.hypot(s.vx - mo.vx, s.vy - mo.vy);
       if (vRel < 3) {

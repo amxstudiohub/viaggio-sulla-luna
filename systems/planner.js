@@ -56,7 +56,7 @@ export function orbitalElements(ship, t, astro = ASTRO) {
 /* ---------------- Time-Warp ---------------- */
 
 export class TimeWarp {
-  constructor(levels = [1, 10, 100, 1000, 2000, 5000]) { this.levels = levels; this.i = 0; }
+  constructor(levels = [1, 2, 3, 10, 100, 1000, 2000, 5000]) { this.levels = levels; this.i = 0; }
   get current() { return this.levels[this.i]; }
   up()   { if (this.i < this.levels.length - 1) this.i++; return this.current; }
   down() { if (this.i > 0) this.i--; return this.current; }

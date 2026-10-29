@@ -12,8 +12,11 @@
  *   F8 ASCESA     -> AscentGNC dal suolo -> orbita a 20 km
  *   F9 RENDEZVOUS -> MATCH, impulsi di fase, deriva, molla CW -> DOCKED
  *   F10 TEI       -> scan corridoio, burn, impulsi di correzione a meta' crociera
- *   F11 RIENTRO   -> skip re-entry con portanza, paracadute -> SPLASHDOWN
- *   DONE          -> ammaraggio completato (o demo F1-F5 se demoEnd)
+ *   F11 CRUCIERA  -> caduta verso la Terra, MCC, sgancio modulo di servizio
+ *   F12 RIENTRO   -> skip re-entry con portanza (un solo rimbalzo), picco termico, blackout
+ *   F13 AMMARAGGIO-> droga, 4 principali, ammaraggio a ~8,5 m/s reali
+ *   DONE          -> ammaraggio completato (o demo F1-F5 se demoEnd),
+ *                    i beat del recupero in mare li narra la cinematica
  *
  * Modulo PURO (no DOM): comanda sim/warp/node iniettati, narra via callback.
  * Testabile in node: tests/autopilot.test.mjs + tests/phase2.test.mjs.
@@ -21,7 +24,7 @@
 
 import { G0 } from '../data/spacecraft_specs.js';
 import { orbitalElements } from './planner.js';
-import { predictTrajectory, moonState, progradeUnit, ATM } from '../core/physics.js';
+import { predictTrajectory, moonState, progradeUnit, ATM, hReal, vReal, hSim } from '../core/physics.js';
 import { DescentGNC, AscentGNC } from './descent.js';
 import { findFlatSite } from './terrain.js';
 
@@ -31,7 +34,8 @@ export const PHASE = {
   STAGE: "F5 SEPARAZIONE PM", DESAT: "F6 DEORBITAZIONE",
   DISCESA: "F7 DISCESA TATTICA", ASCESA: "F8 RISALITA LUNARE",
   RENDEZVOUS: "F9 RENDEZVOUS", TEI: "F10 INIEZIONE TERRA",
-  RIENTRO: "F11 RIENTRO SKIP", DONE: "MISSIONE COMPLETATA",
+  CRUCIERA: "F11 CRUCIERA TERRA", RIENTRO: "F12 RIENTRO",
+  AMMARAGGIO: "F13 AMMARAGGIO", DONE: "MISSIONE COMPLETATA",
 };
 
 const fmtH = s => (s / 3600).toFixed(1) + " h";
@@ -44,6 +48,19 @@ export class Autopilot {
     this.plan = null; this.burn = null; this.flags = {};
     this.demoEnd = demoEnd;
     this.gnc = null; this.rz = null; this.tei = null;
+    this.crociera = null; this.ammaraggio = null;
+  }
+
+  /**
+   * Narrazione con dedup: lo stesso `key` non viene ripetuto prima di
+   * `windowSec` di tempo simulato (evita il mitico "Nessuna finestra TEI" ×15).
+   */
+  sayKey(key, text, phase, windowSec = 1200) {
+    const k = 'k:' + key;
+    if (this.flags[k] !== undefined && this.sim.t - this.flags[k] < windowSec) return false;
+    this.flags[k] = this.sim.t;
+    this.narrate(text, phase);
+    return true;
   }
 
   /* ---------------- API pubblica ---------------- */
@@ -217,19 +234,31 @@ export class Autopilot {
         "Un ingresso troppo ripido (-25°) ci farò impattare nell'oceano a 11 km/s: il corridoio dolce (|γ| < 7°) è largo pochi km — " +
         "lo cerco con una griglia di burn finiti, poi lo rifinirò con impulsi di correzione a metà crociera (come le missioni vere).", p);
     }
+    if (p === PHASE.CRUCIERA) {
+      this.crociera = { smDone: false };
+      this.warp.set(5000);
+      this.narrate("FASE 11 — CROCIERA DI RITORNO: siamo fuori dalla sfera d'influenza lunare e cadiamo " +
+        "verso la Terra. Tengo la rotta con le correzioni a metà crociera e sgancio il modulo di servizio " +
+        "poco prima dell'atmosfera: da lì comanda solo lo scudo termico.", p);
+    }
     if (p === PHASE.RIENTRO) {
-      this.rientro = { atmWas: false, interfaces: 0, skipped: false, chuteWas: false };
-      this.warp.set(100);
-      this.narrate("FASE 11 — RIENTRO SKIP: all'interfaccia atmosferica (100 km reali = 10 km scalati) orienterò la capsula con " +
-        "portanza verso l'alto (bank 1) sotto gli 8 km: la capsula SBANDERÀ sull'atmosfera come un sasso piatto, dissipando energia " +
-        "a ogni rimbalzo senza superare i 6 g d'equipaggio. Poi paracadute e ammaraggio.", p);
+      this.rientro = { atmWas: false, interfaces: 0, skipped: false, peakSeen: false,
+        peakDone: false, bo: false, bc: false, gPeak: false };
+      this.warp.set(3);   // ~13 min di simulazione ≈ 3 minuti reali di scena continua
+      this.narrate("FASE 12 — RIENTRO: all'interfaccia atmosferica (100 km reali) presenterò lo scudo con " +
+        "un bank angle per guadagnare portanza: un solo rimbalzo sull'atmosfera come un sasso piatto, per " +
+        "dissipare energia senza superare i 6 g d'equipaggio. Poi discesa balistica, paracadute, ammaraggio.", p);
+    }
+    if (p === PHASE.AMMARAGGIO) {
+      this.ammaraggio = { drogue: false, main: false, low: false };
+      this.warp.set(2);
     }
     if (p === PHASE.DONE) {
       this.warp.set(1);
       if (sim.status === "SPLASHDOWN") {
-        this.narrate("AMMARAGGIO ✔ La capsula ha completato il treno di rimbalzi atmosferici, dissipato l'energia di ritorno " +
-          "(picco " + sim.gMax.toFixed(1) + " g, limite 6 g) e ammarinato in sicurezza. Missione completa: dalla LEO alla superficie lunare e ritorno. " +
-          "Premi V per il comando manuale, 0 per ripetere la demo.", "MISSIONE COMPLETATA");
+        this.narrate("AMMARAGGIO ✔ La capsula ha dissipato l'energia di ritorno attraversando l'atmosfera, " +
+          "con un picco di " + sim.gMax.toFixed(1) + " g (limite 6 g), e ha ammarato in sicurezza. " +
+          "Missione completa: dalla LEO alla superficie lunare e ritorno. Recupero in mare in corso.", "MISSIONE COMPLETATA");
       } else {
         const el = orbitalElements(sim.ship, sim.t);
         this.narrate("MISSIONE DEMO COMPLETATA ✔ Orbita lunare stabile: Ap " + fmtKm(el.altAp) +
@@ -402,28 +431,86 @@ export class Autopilot {
     else if (this.phase === PHASE.TEI) {
       this.teiUpdate();
     }
+    else if (this.phase === PHASE.CRUCIERA) {
+      const altE = Math.hypot(sim.ship.x, sim.ship.y) - sim.astro.earth.radius;
+      const vC = Math.max(500, Math.hypot(sim.ship.vx, sim.ship.vy));
+      if (altE > 200e3) this.warpFor((altE - 200e3) / vC); // ~6 s reali di crociera
+      else if (this.warp.current > 100) this.warp.set(100);
+      // ~12 minuti reali prima dell'interfaccia: resta solo la capsula di rientro
+      if (!this.crociera.smDone && hReal(altE) < 500e3) {
+        this.crociera.smDone = true;
+        if (sim.jettisonSM()) {
+          this.narrate("SGANCIO MODULO DI SERVIZIO: lo stadio di spinta si allontana su una traiettoria "
+            + "propria. Da qui in poi siamo la sola capsula di rientro, " + (sim.mass / 1e3).toFixed(1)
+            + " tonnellate con lo scudo termico rivolto al flusso.", "F11");
+        }
+      }
+      if (hReal(altE) < 300e3) { this.enter(PHASE.RIENTRO); return; }
+    }
     else if (this.phase === PHASE.RIENTRO) {
       const altE = Math.hypot(sim.ship.x, sim.ship.y) - sim.astro.earth.radius;
-      if (altE > 200e3) { // smart warp: la crociera di ritorno Luna->Terra in ~6 s reali
-        const v = Math.max(500, Math.hypot(sim.ship.vx, sim.ship.vy));
-        this.warpFor((altE - 200e3) / v);
-      } else if (this.warp.current > 100) this.warp.set(100);
+      const hR = hReal(altE), vR = vReal(Math.hypot(sim.ship.vx, sim.ship.vy));
       if (altE < ATM.top) {
-        if (this.warp.current > 10) this.warp.set(10);
-        if (!this.rientro.atmWas && !this.flags.if1) {
-          this.flags.if1 = true; this.rientro.interfaces++;
-          this.narrate("INTERFACCIA ATMOSFERICA: v = " + Math.hypot(sim.ship.vx, sim.ship.vy).toFixed(0) +
-            " m/s. Bank 1: presento lo scudo con portanza — punto a RIMBALZARE fuori (skip).", "F11");
+        if (this.warp.current > 3) this.warp.set(3);   // volo in atmosfera: scena continua
+      } else if (this.rientro.skipped) {
+        this.warp.set(100);          // rimbalzo: non c'è nulla da vedere, si corre
+        this._richiamo();            // e se il rimbalzo è troppo alto, si forza il 2° ingresso
+      }
+      if (!this.flags.if1 && altE < ATM.top) {
+        this.flags.if1 = true; this.rientro.interfaces++;
+        this.narrate("INTERFACCIA ATMOSFERICA: quota 100 km, velocità " + vR.toFixed(0)
+          + " m/s reali. Bank 1: presento lo scudo con portanza, punto a rimbalzare una volta sola.", "F12");
+      }
+      if (altE < ATM.top) {
+        this.rientro.peakQ = Math.max(this.rientro.peakQ || 0, sim.qHeat);
+        if (sim.qHeat > ATM.qRef * 0.55) this.rientro.peakSeen = true;
+        if (this.rientro.peakSeen && !this.rientro.peakDone && sim.qHeat < this.rientro.peakQ * 0.6) {
+          this.rientro.peakDone = true;
+          this.narrate("PICCO TERMICO SUPERATO: lo scudo ablativo ha fatto il suo lavoro. G massime finora "
+            + sim.gMax.toFixed(1) + " e il flusso di calore sta calando.", "F12");
+        }
+        if (!this.rientro.bo && sim.blackout) {
+          this.rientro.bo = true;
+          this.narrate("BLACKOUT DI PLASMA: la ionizzazione attorno alla capsula rimbalza le onde radio. "
+            + "Nessun telemetro per qualche minuto, l'autopilota prosegue da solo.", "F12");
+        }
+        if (this.rientro.bo && !sim.blackout) {
+          this.rientro.bo = false;
+          this.narrate("BLACKOUT TERMINATO: radio di nuovo in ascolto. Velocità " + vR.toFixed(0)
+            + " m/s reali, quota " + hR.toFixed(0) + " m.", "F12");
+        }
+        if (!this.rientro.gPeak && sim.gLoad > 4.2) {
+          this.rientro.gPeak = true;
+          this.narrate("PICCO DI DECELERAZIONE: " + sim.gLoad.toFixed(1)
+            + " g all'equipaggio, limite di progetto 6 g. Tutto nei parametri.", "F12");
         }
       }
       if (this.rientro.atmWas && altE > ATM.top && !this.rientro.skipped) {
         this.rientro.skipped = true;
-        this.narrate("SKIP RIUSCITO ✔ Abbiamo rimbalzato sull'atmosfera: l'apogeo del rimbalzo dissiperà altra energia al prossimo ingresso. G max finora " + sim.gMax.toFixed(1) + ".", "F11");
+        this.narrate("SKIP RIUSCITO ✔ Abbiamo rimbalzato sull'atmosfera: il secondo ingresso sarà più "
+          + "ripido e chiuderà il lavoro. G max finora " + sim.gMax.toFixed(1) + ".", "F12");
       }
       this.rientro.atmWas = altE < ATM.top;
-      if (sim.chutes && !this.rientro.chuteWas) {
-        this.rientro.chuteWas = true;
-        this.narrate("PARACADUTE aperti: frenamento finale verso l'ammaraggio.", "F11");
+      if (sim.chuteStage) { this.enter(PHASE.AMMARAGGIO); return; }
+    }
+    else if (this.phase === PHASE.AMMARAGGIO) {
+      const altE = Math.hypot(sim.ship.x, sim.ship.y) - sim.astro.earth.radius;
+      const hR = hReal(altE), vR = vReal(Math.hypot(sim.ship.vx, sim.ship.vy));
+      if (this.warp.current > 2) this.warp.set(2);
+      if (!this.ammaraggio.drogue && sim.chuteStage === 'drogue') {
+        this.ammaraggio.drogue = true;
+        this.narrate("PARACADUTE DI FRENAZIONE aperti a " + hR.toFixed(0) + " m reali, "
+          + vR.toFixed(0) + " m/s: la capsula ruota a scudo in giù.", "F13");
+      }
+      if (!this.ammaraggio.main && sim.chuteStage === 'main') {
+        this.ammaraggio.main = true;
+        this.narrate("PARACADUTE PRINCIPALI: quattro calotte a " + hR.toFixed(0)
+          + " m, velocità " + vR.toFixed(0) + " m/s. L'oceano è proprio sotto di noi.", "F13");
+      }
+      if (!this.ammaraggio.low && hR < 150) {
+        this.ammaraggio.low = true;
+        this.narrate("Mille piedi: " + vR.toFixed(0) + " m/s. Assetto di impatto, scudo in giù, "
+          + "equipaggio in posizione.", "F13");
       }
     }
   }
@@ -489,8 +576,8 @@ export class Autopilot {
         tei.retryUntil = tei.retryUntil
           ? tei.retryUntil + 6 * 3600
           : (Math.floor(sim.t / TM) + 1) * TM - 2 * 3600;
-        this.narrate("Nessuna finestra TEI in questa epoca (l'angolo di ingresso sarebbe troppo ripido). " +
-          "Coast in orbita lunare: riscansione tra 3 ore, la geometria Terra-Luna è periodica.", "F10");
+        this.sayKey('tei-nowindow', "Nessuna finestra TEI in questa epoca (l'angolo di ingresso sarebbe troppo ripido). " +
+          "Coast in orbita lunare: riscansione tra 3 ore, la geometria Terra-Luna è periodica.", "F10", 3600);
         return;
       }
       if (tei.sub === 0) {
@@ -561,19 +648,19 @@ export class Autopilot {
       const pr = predictTrajectory(sim, { steps: 62000, dt: 1 });
       let m = Infinity;
       for (const p of pr.points) { const d = Math.hypot(p.x, p.y) - sim.astro.earth.radius; if (d < m) m = d; }
-      if ((m < 8e3 && m > 1e3) || tei.pulses >= 10) { // perigeo 1-8 km: banda provata (G contenuta)
+      if ((m > 5.7e3 && m < 5.82e3) || tei.pulses >= 20) { // perigeo 57-58 km reali: finestra del rimbalzo
         this.narrate("Corridoio di rientro agganciato: perigeo " + fmtKm(m) + " dopo " + tei.pulses +
           " impulsi di correzione. Buena suerte.", "F10 COMPLETATA");
-        this.enter(PHASE.RIENTRO);
+        this.enter(PHASE.CRUCIERA);
         return;
       }
-      if (sim.activeStage.propellant < 3e2) { this.enter(PHASE.RIENTRO); return; }
+      if (sim.activeStage.propellant < 3e2) { this.enter(PHASE.CRUCIERA); return; }
       // dentro la SOI lunare il prograde è luna-centrico e il pulse è inefficace:
       // rimanda la valutazione finché la nave non è a > 10.000 km dalla Luna
       const mo = moonState(sim.t, sim.astro);
       if (Math.hypot(sim.ship.x - mo.x, sim.ship.y - mo.y) < 10e3 * 1e3) { tei.nextEval = sim.t + 600; return; }
-      const cdv = Math.max(-40, Math.min(40, -(m - 4e3) / 14e3));
-      if (Math.abs(cdv) < 0.05) { this.enter(PHASE.RIENTRO); return; }
+      const cdv = Math.max(-40, Math.min(40, -(m - 5.76e3) / 14e3));
+      if (Math.abs(cdv) < 0.004) { this.enter(PHASE.CRUCIERA); return; }
       tei.pulses++; tei.pending = cdv; tei.m0 = sim.mass; tei.stage = 'PULSE';
       this.warp.set(1);
       this.narrate("Correzione a metà crociera n." + tei.pulses + ": perigeo " + fmtKm(m) +
@@ -601,12 +688,24 @@ export class Autopilot {
    */
   hold() {
     if (!this.active) return;
-    // ENTRY GUIDANCE skip: portanza (bank 1) solo in penetrazione sotto gli 8 km;
-    // muso su in uscita. È la legge che genera il "treno di rimbalzi" provato.
-    if (this.phase === PHASE.RIENTRO) {
-      const rE = Math.hypot(this.sim.ship.x, this.sim.ship.y);
-      const altE = rE - this.sim.astro.earth.radius;
-      this.sim.bank = altE < 8e3 ? 1 : 0;
+    // ENTRY GUIDANCE: portanza (bank 1) solo mentre PENETRA (vUp < 0) e il flusso
+    // termico resta sotto il limite; in uscita bank 0, altrimenti la capsula si
+    // rilancia e parte il "treno di rimbalzi" (con la vecchia legge bang-bang
+    // `altE < 8e3 ? 1 : 0` gli ingressi in atmosfera erano 9 invece di uno).
+    if (this.phase === PHASE.RIENTRO || this.phase === PHASE.AMMARAGGIO) {
+      const sim = this.sim;
+      const rE = Math.hypot(sim.ship.x, sim.ship.y);
+      const altE = rE - sim.astro.earth.radius;
+      const ux = sim.ship.x / rE, uy = sim.ship.y / rE;
+      const vUp = sim.ship.vx * ux + sim.ship.vy * uy;
+      const inAtm = altE < ATM.top && altE > 0;
+      if (!this.rientro || !this.rientro.skipped) {
+        // prima passata: portanza a cabrare finché penetra = lo skip
+        sim.bank = (inAtm && vUp < 0 && sim.qHeat < ATM.qRef * 1.15) ? 1 : 0;
+      } else {
+        // seconda passata: solo modulazione del picco di G (solleva se le G salgono)
+        sim.bank = (inAtm && vUp < 0 && sim.gLoad > 4.5) ? 1 : 0;
+      }
     }
     if (this.phase === PHASE.SETUP || this.phase === PHASE.TLI) this.snapPrograde(1);
     else if (this.phase === PHASE.CRUISE) {
@@ -624,11 +723,40 @@ export class Autopilot {
       else if (this.tei.stage === 'PULSE') this.snapPrograde(this.tei.pending >= 0 ? 1 : -1);
       else this._alignTo(this._flowAngle(1)); // WAIT/SCAN: in orbita lunare muso prograde
     }
-    else if (this.phase === PHASE.RIENTRO) {
+    else if (this.phase === PHASE.CRUCIERA) {
       // Crociera di ritorno: muso lungo la velocità finché fuori atmosfera
       const altE = Math.hypot(this.sim.ship.x, this.sim.ship.y) - this.sim.astro.earth.radius;
       if (altE > 200e3) this._alignTo(this._flowAngle(1));
     }
+    else if (this.phase === PHASE.RIENTRO || this.phase === PHASE.AMMARAGGIO) {
+      this._alignTo(this._flowAngle(-1));   // scudo termico rivolto al flusso
+    }
+  }
+
+  /**
+   * Watchdog del rimbalzo: con la portanza la capsula può uscire dall'atmosfera
+   * su un'orbita il cui perigeo resta sopra i 100 km (nessun secondo ingresso).
+   * Se dopo 8 minuti non è rientrata, calcola l'impulso retrogrado necessario e
+   * lo applica (il sim non modella il residuo di spinta: è l'unico modo di
+   * garantire che la missione finisca in mare e non in orbita per l'eternità).
+   */
+  _richiamo() {
+    const sim = this.sim, r = this.rientro;
+    if (r.calls === undefined) { r.calls = 0; r.next = sim.t + 480; }
+    if (sim.t < r.next || r.calls >= 6) return;
+    r.next = sim.t + 420; r.calls++;
+    const pr = predictTrajectory(sim, { steps: 26000, dt: 2 });
+    let m = Infinity;
+    for (const p of pr.points) { const d = Math.hypot(p.x, p.y) - sim.astro.earth.radius; if (d < m) m = d; }
+    if (m < ATM.top * 0.9) return;                 // rientro già garantito
+    const rNow = Math.hypot(sim.ship.x, sim.ship.y);
+    const vNow = Math.max(1, Math.hypot(sim.ship.vx, sim.ship.vy));
+    const sens = Math.max(1, 2 * rNow * rNow * vNow / sim.astro.earth.GM); // m di perigeo per m/s
+    const dv = Math.max(-90, Math.min(-5, -(ATM.top * 0.55 - m) / sens));
+    sim.ship.vx += (sim.ship.vx / vNow) * dv; sim.ship.vy += (sim.ship.vy / vNow) * dv;
+    this.narrate("RICHIAMO DI EMERGENZA: il rimbalzo ci ha lasciati su un'orbita con perigeo a " +
+      fmtKm(m) + ", fuori dall'atmosfera. Impulso retrogrado di " + (-dv).toFixed(0) +
+      " m/s: forzo il secondo ingresso, che sarà balistico.", "F12");
   }
 
   /** Guida rendezvous a stati: MATCH -> IMPU1 -> COAST -> IMPU2 -> FINAL. */

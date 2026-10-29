@@ -1,5 +1,5 @@
 import { MISSIONS, ASTRO } from './data/spacecraft_specs.js';
-import { Sim, predictTrajectory, progradeUnit, moonState } from './core/physics.js';
+import { Sim, predictTrajectory, progradeUnit, moonState, hSim, vSim } from './core/physics.js';
 import { orbitalElements, TimeWarp, ManeuverNode } from './systems/planner.js';
 import { Autopilot, PHASE } from './systems/autopilot.js';
 import { AudioComms } from './systems/audio_comms.js';
@@ -44,6 +44,26 @@ function startMission(mission, opts = {}) {
   });
   window.__ap = autopilot; // (dopo la creazione: prima era null)
   window.__jump = (i) => jumpTo(i);
+// Dev/test: teletrasporta la capsula all'interfaccia di rientro (120 km, 11,09 km/s,
+// perigeo in km REALI) per provare la cinematica terminale senza correre 39 ore.
+window.__rientro = (periKm = 57.6) => {
+  const A = sim.astro, R = A.earth.radius, GM = A.earth.GM;
+  sim.smJettisoned = true;
+  sim.stageIndex = sim.stages.length - 1;
+  const stg = sim.activeStage;
+  if (stg && sim.mission.returnModule) { stg.dryMass = sim.mission.returnModule.mass; stg.propellant = 0; stg.groups = []; }
+  const r0 = R + hSim(120e3), v = vSim(11094);
+  const a = -GM / (v * v - 2 * GM / r0);
+  const ecc = 1 - (R + hSim(periKm * 1e3)) / a;
+  const p = a * (1 - ecc * ecc);
+  const nu = -Math.acos(Math.max(-1, Math.min(1, (p / r0 - 1) / ecc)));
+  const h = Math.sqrt(GM * p);
+  sim.ship.x = r0; sim.ship.y = 0;
+  sim.ship.vx = (GM / h) * ecc * Math.sin(nu); sim.ship.vy = h / r0;
+  if (!autopilot.active) toggleAutopilot();
+  autopilot.enter(PHASE.RIENTRO);
+  return 'EI gamma ' + (Math.atan2(sim.ship.vx, sim.ship.vy) * 180 / Math.PI).toFixed(2) + '\u00b0';
+};
   window.__jumpNext = () => jumpNext();
   window.__step = () => stepIndex();   // indice di fase corrente (tool di test)
   window.__audio = audio;
@@ -143,14 +163,18 @@ const JUMPS = [
   { label: '3. Powered Descent', reached: () => autopilot.phase === PHASE.DISCESA },
   { label: '4. Touchdown & Ascent', reached: () => sim.status === 'TOUCHDOWN' || autopilot.phase === PHASE.ASCESA },
   { label: '5. Rendezvous', reached: () => sim.status === 'DOCKED' || autopilot.phase === PHASE.RENDEZVOUS },
-  { label: '6. Skip Re-entry', reached: () => { const a = altEarth(); return a < 9e3 && a > 0 && sim.status === 'NOMINAL'; } },
-  { label: '7. Splashdown', reached: () => sim.status === 'SPLASHDOWN' },
+  { label: '6. Trans-Earth Injection', reached: () => autopilot.phase === PHASE.TEI },
+  { label: '7. Coast & SM Jettison', reached: () => autopilot.phase === PHASE.CRUCIERA || sim.smJettisoned },
+  { label: '8. Skip Re-entry', reached: () => { const a = altEarth(); return a < 9e3 && a > 0 && sim.status === 'NOMINAL'; } },
+  { label: '9. Splashdown', reached: () => sim.status === 'SPLASHDOWN' },
 ];
 
 function stepIndex() {
   const p = autopilot.phase;
-  if (sim.status === 'SPLASHDOWN' || p === PHASE.DONE) return 6;
-  if (p === PHASE.TEI || p === PHASE.RIENTRO) return 5;
+  if (sim.status === 'SPLASHDOWN' || p === PHASE.DONE) return 8;
+  if (p === PHASE.AMMARAGGIO || p === PHASE.RIENTRO) return 7;
+  if (p === PHASE.CRUCIERA) return 6;
+  if (p === PHASE.TEI) return 5;
   if (sim.status === 'DOCKED' || p === PHASE.RENDEZVOUS) return 4;
   if (sim.status === 'TOUCHDOWN' || p === PHASE.ASCESA) return 3;
   if (p === PHASE.STAGE || p === PHASE.DESAT || p === PHASE.DISCESA) return 2;
@@ -165,7 +189,10 @@ function jumpTo(i) {
   if (JUMPS[i].reached() || stepIndex() > i) { sim.log('Già in/superata: ' + JUMPS[i].label, 'info'); return; }
   if (!autopilot.active) toggleAutopilot();
   if (!autopilot.active) return;
-  jump.active = true; jump.idx = i; jump.deadline = performance.now() + 25000;
+  jump.active = true; jump.idx = i;
+  // budget di wall-clock proporzionale alla distanza: un salto dalla partenza fino
+  // all'ammaraggio deve poter attraversare tutta la crociera lunare
+  jump.deadline = performance.now() + 25000 + Math.max(0, i - stepIndex()) * 16000;
   audio.muted = true;
   audio.stop();          // taglia la voce in onda (clip o TTS che sia)
   hud.director('SALTO FASE', '⏭ SALTO IN CORSO verso ' + JUMPS[i].label + ' — fast-forward della simulazione…');
@@ -357,6 +384,17 @@ function frame(now) {
 
 window.addEventListener('DOMContentLoaded', () => {
   cockpit = new Cockpit(document.getElementById('view'));
+// Beat del recupero in mare: le narra la cinematica a tempo reale, non la fisica.
+const BEATS = [
+  'Nave di recupero in vista: la capsula ondeggia a cinquanta metri, il portellone di poppa è aperto.',
+  'Elicottero di recupero in discesa: sei metri sopra la capsula, il rotore alza acqua. Nuotatori in mare.',
+  'Portello aperto: equipaggio in sicurezza, i quattro taikonauti salutano il ponte di volo.',
+  'Missione completata: dalla LEO alla superficie lunare, e ritorno fino al recupero in mare.',
+];
+cockpit.onBeat = (n) => {
+  const b = BEATS[n];
+  if (b) hud.director('RECUPERO', audio.say(b, 'RECUPERO'));
+};
   window.__cockpit = cockpit;
   hud = new Hud();
   // avvio rapido via URL: ?mission=cnsa | ?mission=spacex (utile per headless/test)

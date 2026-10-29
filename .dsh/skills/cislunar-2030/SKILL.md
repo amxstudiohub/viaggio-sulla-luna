@@ -28,12 +28,12 @@ description: >
 ## 1. Com'è fatto (mappa)
 | File | Ruolo |
 |------|-------|
-| `index.html` | shell HUD: topbar (MET/WARP/STATUS/AUTOPILOT/◀◀/▶▶/RADIO), timeline 7 fasi cliccabile, pannelli, help |
+| `index.html` | shell HUD: topbar (MET/WARP/STATUS/AUTOPILOT/◀◀/▶▶/RADIO), timeline 9 fasi cliccabile, pannelli, help |
 | `main.js` | bootstrap, input tastiera, loop frame (substep DT_PHYS=0.1s), jump timeline (JUMPS/stepIndex/driveJump), surfaceHold, TimeWarp |
 | `core/physics.js` | Sim: CR3BP, `gravityAt`, `moonState`, `altitudeAboveNearest`, `progradeUnit`, staging, `activeGroup` (gruppi motore eleggibili solo se reggono il peso locale) |
-| `systems/autopilot.js` | macchina a fasi F1→F11 (PHASE stringhe italiane), PDIT trigger, tdWait, narrazione |
+| `systems/autopilot.js` | macchina a fasi F1→F13 (F11 crociera+sgancio SM, F12 rientro a skip, F13 ammaraggio; PHASE stringhe italiane), PDIT trigger, tdWait, narrazione |
 | `systems/descent.js` | DescentGNC/AscentGNC (PID, glide-slope, fault a 3 km) |
-| `systems/planner.js` | TimeWarp (livelli [1,10,100,1000,2000,5000]) + ManeuverNode |
+| `systems/planner.js` | TimeWarp (scala [1,2,3,10,100,1000,2000,5000]: `set(v)` accetta SOLO valori della scala — 2 e 3 servono alla cinematica di rientro) + ManeuverNode |
 | `ui/cockpit.js` | canvas tattico + cinematica: `_cinematic` (discesa/ascesa 25 km→suolo), `_surface` (hold), `_plumeFrame`, `_dustFrame`, `_moonSprite` (Luna procedurale cached), `forceSurface()`, Atto 0 lancio |
 | `systems/audio_comms.js` | radio: clip pre-baked su radio bus (HP120→LP3400→saturazione→flutter), Quindar, ducking, coda FIFO, fallback TTS browser |
 | `data/comms_lines.js` | COPIONE radio: 57 righe IT/EN + regex di aggancio al messaggio del Director, slot numerici a griglia chiusa, `numToIt`/`numToEn` |
@@ -51,7 +51,15 @@ description: >
 GM_T=3.98e12 · GM_L=4.884e10 · R_T=657.1 km (637.1) · R_L=173.7 km · a=38.440 km · SOI≈6.580 km.
 PHASE: "F7 DISCESA TATTICA", "F8 RISALITA LUNARE", ecc. sim.status: NOMINAL/TOUCHDOWN/DOCKED/SPLASHDOWN/CRASHED.
 Missioni: CNSA (Lanyue ~6 t, YF-36) e SPACEX HLS (~683 t a DISCESA, RAPTOR6 14.358 MN + RCS 240 kN maxAlt 100 m).
-Tempistiche: TOUCHDOWN ~21.5 h, LIFTOFF 21.6 h, DOCKED ~23 h, SPLASHDOWN ~51 h.
+Tempistiche: TOUCHDOWN ~21.5 h, LIFTOFF 21.6 h, DOCKED ~23 h, SPLASHDOWN ~39.5 h (CNSA, con skip).
+
+**Rientro — scala da ricordare** (`core/physics.js`): lunghezze ÷10 e tempo reale ⇒ `v_reale = v_sim·√10`,
+`h_reale = h_sim·10`, **accelerazioni già reali**. Ne segue `CdA_sim = 10·CdA_reale` (capsula 210),
+densità dalla tabella US Standard `RHO_TABLE` (un'esponenziale single-H sbagliava di ~20× sopra i 40 km,
+12-13 g e niente skip), `ATM.top = 10e3` sim = 100 km reali. Paracadute con `k = G0/vT²`: il rilassamento
+lineare verso la velocità terminale non bilancia la gravità (impatto a 25 m/s invece di 8,5).
+Corridoio TEI: perigeo 57-58 km reali ⇒ UN solo rimbalzo; sotto 56 km non skipa, sopra 60 non rientra più
+(watchdog `_richiamo()`). Scena terminale ≈ 122 s reali (warp 3 in atmosfera, 100 sul rimbalzo, 2 coi paracadute).
 
 ## 3. Flusso jump/autopilota (dopo il fix anti-crash 21-10)
 - `jumpTo(i)`: solo in avanti (`stepIndex() > i` ⇒ "già superata"), un salto alla volta, deadline 25 s.
@@ -96,6 +104,9 @@ Dopo modifiche a physics/autopilot/descent lanciare TUTTA la suite; per UI/cockp
 - Moduli ES6 da file:// bloccati: su Windows serve il .bat (Python/py/Node fallback).
 - Voce radio: lo schermo mostra il testo del Director, la radio legge il copione (`data/comms_lines.js`): sono DUE testi diversi. Cambiare una riga del copione senza `node tools/tts_bake.mjs` lascia la clip vecchia (`comms_check` lo segnala come "testo cambiato").
 - Token fine-grained per i push: servono **Contents**, **Administration**, **Pages** e **Workflows** (Read and write). Senza Workflows il push di un file sotto `.github/workflows/` viene rifiutato con 403 anche se i contenuti sono scrivibili. Cambiare una riga del copione senza `node tools/tts_bake.mjs` lascia la clip vecchia (`comms_check` lo segnala come "testo cambiato").
+- **`TimeWarp.set(v)` è muto se `v` non è nella scala**: `set(4)`/`set(200)` non fanno nulla, in silenzio. La scala ora include 2 e 3 (volo in atmosfera).
+- Nei tool di calibrazione `ap.active` deve essere `true`, altrimenti `hold()` esce subito e la portanza è azzerata: risultati identici per ogni ClA.
+- HUD e cinematica del rientro mostrano solo numeri REALI (`hReal`/`vReal`): mai esporre unità sim all'utente.
 - **`speechSynthesis` è disattivata di default** (`AudioComms.allowTTS=false`): il fallback sulla voce del browser era il modo più sicuro di sentire una seconda voce sovrapposta alla radio. Si riaccende solo per diagnostica con `index.html?tts=1`. Un messaggio senza clip fa sentire i soli toni + `sim.log('RADIO: ...','warn')`. Verifica con `node tools/cdp_tts_probe.mjs` (0 chiamate a speak, 0 messaggi non baked).
 - Le `re` del copione girano sul testo NORMALIZZATO (minuscolo, accenti spogliati, punteggiatura→spazio): niente apostrofi né parentesi nelle regex, e vanno tenute non ambigue (test 4 di comms.test). Il testo `it:`/`en:` del copione invece va scritto in italiano CORRETTO (accenti e apostrofi veri: "l'orbita", "velocità", "è", mai "spegnuto" → "spento"): edge-tts pronuncia meglio e il manifest è l'unico testo verificabile.
 - Slot numerici = griglia chiusa min/max/step: il valore viene arrotondato e cappato, quindi la clip esiste sempre; se il regex dello slot non matcha, la riga viene letta senza numero.

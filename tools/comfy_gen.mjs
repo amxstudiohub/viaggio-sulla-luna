@@ -2,10 +2,19 @@
  * Generatore asset via ComfyUI remoto (DGX Spark).
  * Uso: node tools/comfy_gen.mjs <nome> <width> <height> <steps> "<prompt>" [flux|qwen]
  * flux = flux1-dev-fp8 (cfg 1.0) | qwen = Qwen Image 2.1 int8 (cfg 4.0)
- * Output: assets/img/<nome>.png — richiede ComfyUI API su http://AI-Station-DGX:8188 (o COMFY_HOST=ip:8188)
+ * Output: assets/img/<nome>.png — richiede ComfyUI API su http://AI-Station-DGX:8188
+ * (usa l'IP 192.168.0.169:8188 se l'hostname non risolve; COMFY_HOST sovrascrive)
  */
 import fs from 'fs';
-const HOST = process.env.COMFY_HOST || 'AI-Station-DGX:8188';
+import dns from 'node:dns/promises';
+// L'hostname della DGX non sempre risolve dalla macchina di sviluppo: si prova
+// quello, poi si ripiega sull'IP statico (o su COMFY_HOST se impostato).
+async function resolveHost() {
+  if (process.env.COMFY_HOST) return process.env.COMFY_HOST;
+  try { await dns.lookup('AI-Station-DGX'); return 'AI-Station-DGX:8188'; }
+  catch { return '192.168.0.169:8188'; }
+}
+const HOST = await resolveHost();
 const [nome, w, h, steps, prompt, engine] = process.argv.slice(2);
 if (!nome || !prompt) { console.error('uso: comfy_gen.mjs nome w h steps "prompt" [flux|qwen]'); process.exit(2); }
 const seed = 20300000 + [...nome].reduce((a, c) => a + c.charCodeAt(0) * 7, 0) % 9999;

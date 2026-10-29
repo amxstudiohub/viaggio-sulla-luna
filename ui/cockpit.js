@@ -8,7 +8,7 @@
 
 
 import { ASTRO } from '../data/spacecraft_specs.js';
-import { moonState, progradeUnit } from '../core/physics.js';
+import { moonState, progradeUnit, ATM, hReal, vReal } from '../core/physics.js';
 import { terrainHeight, terrainSlope } from '../systems/terrain.js';
 
 const COL = {
@@ -70,6 +70,16 @@ export class Cockpit {
     this._plume = [];
     this._atmoImg = new Image();
     this._atmoImg.src = 'assets/img/atmo_launch.png';
+    // --- sprite della cinematica di RIENTRO (Flux su DGX, chroma verde -> alpha) ---
+    this._rientroSprites = {};
+    for (const [k, f] of Object.entries({
+      plasma: 'capsule_plasma_key.png', drogue: 'capsule_drogue_key.png',
+      mains: 'capsule_mains_key.png', ship: 'ship_recovery_key.png', heli: 'heli_recovery_key.png',
+    })) { const im = new Image(); im.src = 'assets/img/' + f; this._rientroSprites[k] = im; }
+    this._plateImgs = { reentry: new Image(), ocean: new Image() };
+    this._plateImgs.reentry.src = 'assets/img/reentry_plate.jpg';
+    this._plateImgs.ocean.src = 'assets/img/ocean_plate.jpg';
+    this._seaVideo = null; this._seaOk = false;
     this.act0 = null;
     this.cine = {
       enabled: true, active: false, scroll: 0, lastT: 0,
@@ -83,6 +93,10 @@ export class Cockpit {
         smoke: document.getElementById('cine-smoke'),
         booster: document.getElementById('cine-booster'),
         stage2: document.getElementById('cine-stage2'),
+        plate: document.getElementById('cine-plate'),
+        capsule: document.getElementById('cine-capsule'),
+        ship: document.getElementById('cine-ship'),
+        heli: document.getElementById('cine-heli'),
       } : null,
     };
     if (this.cine.els.vp) {
@@ -333,6 +347,11 @@ export class Cockpit {
       }
     }
 
+    // --- RIENTRO: plasma → paracadute → ammaraggio → recupero ---
+    if (this.cine.els && this.cine.enabled && this.cam.target === 'ship' && this._rientroVisible(sim)) {
+      this._rientroCine(sim, ui);
+      return;
+    }
     // --- SOTTO I 25 km: vista cinematografica o pannello tattico ---
     const mo = moonState(sim.t, sim.astro);
     const altM = Math.hypot(s.x - mo.x, s.y - mo.y) - sim.astro.moon.radius;
@@ -367,6 +386,239 @@ export class Cockpit {
     this.cine.els.vp.style.display = 'none';
     this.canvas.classList.remove('cine-mini');
   }
+
+  /** Vero quando la cinematica del rientro deve prendere il controllo del viewport. */
+  _rientroVisible(sim) {
+    const altE = Math.hypot(sim.ship.x, sim.ship.y) - sim.astro.earth.radius;
+    if (sim.status === 'SPLASHDOWN') return true;
+    return !!sim.smJettisoned && altE > 0 && altE < ATM.top * 1.35 && (sim.qHeat > 0 || !!sim.chuteStage);
+  }
+
+  /**
+   * CINEMATICA DEL RIENTRO: plasma -> droga -> principali -> ammaraggio -> recupero.
+   * Gli stati sono letti dalla simulazione (nulla è inventato); le animazioni
+   * girano a tempo REALE così reggono il warp 3-100 dell'autopilota. Le placche
+   * Flux e il video del mare sono opzionali: senza, tutto è procedurale.
+   */
+  _rientroCine(sim, ui) {
+    const E = this.cine.els, R = this.cine;
+    const rdt = Math.min(0.1, ui.dtReal || 1 / 60);
+    const dpr = window.devicePixelRatio || 1, W = this.w, H = this.h;
+    if (!R.active) {
+      E.vp.style.display = 'block';
+      this.canvas.classList.add('cine-mini');
+      R.active = true;
+      E.bg.style.display = 'none';
+      E.lander.style.display = 'none';
+      for (const k of ['pad', 'smoke', 'booster', 'stage2']) if (E[k]) E[k].style.display = 'none';
+      R.ret = { stage: '', age: 0, beat: -1, embers: [], ring: 0, sea: null };
+    }
+    const rt = R.ret;
+    rt.age += rdt;
+    if (E.overlay.width !== Math.round(W * dpr) || E.overlay.height !== Math.round(H * dpr)) {
+      E.overlay.width = Math.round(W * dpr); E.overlay.height = Math.round(H * dpr);
+    }
+    const ctx = this._cineCtx || (this._cineCtx = E.overlay.getContext('2d'));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const stage = sim.status === 'SPLASHDOWN' ? 'splash'
+      : sim.chuteStage === 'main' ? 'mains'
+      : sim.chuteStage === 'drogue' ? 'drogue' : 'plasma';
+    if (stage !== rt.stage) { rt.stage = stage; rt.age = 0; this._rientroStage(E, stage); }
+
+    if (stage === 'plasma') {
+      const q = Math.max(0, Math.min(1, sim.qHeat / ATM.qRef));
+      this._plate(E, W, H, 'reentry', rt.age, q);
+      const sh = 1.2 + 7 * q;
+      const sx = (Math.random() - 0.5) * sh, sy = (Math.random() - 0.5) * sh;
+      const sc = 0.6 + 0.28 * Math.min(1, rt.age / 45);
+      E.capsule.style.transform = 'translate(-50%,-50%) translate(' + sx.toFixed(1) + 'px,' + sy.toFixed(1) +
+        'px) scale(' + sc.toFixed(2) + ') rotate(' + (-12 + 2.5 * Math.sin(rt.age)).toFixed(1) + 'deg)';
+      E.capsule.style.filter = 'brightness(' + (1 + 1.5 * q).toFixed(2) + ') drop-shadow(0 0 ' +
+        (16 + 90 * q).toFixed(0) + 'px rgba(255,120,40,' + (0.3 + 0.55 * q).toFixed(2) + '))';
+      this._plasmaField(ctx, W, H, q, rt, rdt);
+      if (sim.blackout) this._static(ctx, W, H, rt.age);
+    } else if (stage === 'drogue' || stage === 'mains') {
+      const hy = H * (stage === 'drogue' ? 0.86 : 0.72) + Math.min(70, rt.age * (stage === 'mains' ? 16 : 3));
+      this._seaBackdrop(E, W, H, hy, rt.age, stage);
+      const sway = Math.sin(rt.age * 1.5) * 3.2, bob = Math.sin(rt.age * 0.8) * 5;
+      const sc = stage === 'drogue' ? 0.6 : 0.92;
+      E.capsule.style.transform = 'translate(-50%,-50%) translateY(' + (bob - (stage === 'drogue' ? H * 0.16 : H * 0.04)).toFixed(1) +
+        'px) rotate(' + sway.toFixed(2) + 'deg) scale(' + sc + ')';
+      E.capsule.style.filter = 'brightness(1.05) drop-shadow(0 10px 26px rgba(0,0,0,0.45))';
+    } else {
+      const hy = H * 0.54;
+      this._seaBackdrop(E, W, H, hy, rt.age, 'splash');
+      const bob = Math.sin(rt.age * 1.1) * 4 + Math.sin(rt.age * 2.3) * 1.6;
+      E.capsule.style.transform = 'translate(-50%,-50%) translateY(' + (hy - H / 2 + bob).toFixed(1) +
+        'px) rotate(' + (Math.sin(rt.age * 0.7) * 2).toFixed(2) + 'deg) scale(0.72)';
+      E.capsule.style.filter = 'brightness(0.96) drop-shadow(0 6px 18px rgba(0,0,0,0.5))';
+      if (rt.age < 3.2) this._splashRing(ctx, W / 2, hy + bob, rt.age);
+      const beats = [6, 16, 28, 44];
+      while (rt.beat < beats.length - 1 && rt.age >= beats[rt.beat + 1]) { rt.beat++; this.onBeat(rt.beat, sim); }
+      if (rt.beat >= 0 && E.ship) {
+        const a = Math.min(1, (rt.age - beats[0]) / 4);
+        E.ship.style.display = ''; E.ship.style.opacity = a.toFixed(2);
+        E.ship.style.transform = 'translate(-50%,-50%) translateY(' + (hy - H / 2 + 18 - a * 10).toFixed(0) + 'px) scale(' + (0.7 + 0.25 * a).toFixed(2) + ')';
+      }
+      if (rt.beat >= 1 && E.heli) {
+        const p = Math.min(1, (rt.age - beats[1]) / 5);
+        E.heli.style.display = ''; E.heli.style.opacity = p.toFixed(2);
+        E.heli.style.transform = 'translate(-50%,-50%) translate(' + (W * 0.26 - p * W * 0.1).toFixed(0) + 'px,' +
+          (-H * 0.3 + p * H * 0.28 + Math.sin(rt.age * 6) * 2).toFixed(0) + 'px) scale(' + (0.5 + 0.5 * p).toFixed(2) + ')';
+      }
+      if (rt.beat >= 3) this._missionCard(ctx, W, H, sim, rt);
+    }
+  }
+
+  /** Scambia gli sprite allo stato di rientro corrente. */
+  _rientroStage(E, stage) {
+    const sp = this._rientroSprites;
+    const which = stage === 'plasma' ? sp.plasma : stage === 'drogue' ? sp.drogue : sp.mains;
+    const ok = which && which.complete && which.naturalWidth;
+    if (ok) { E.capsule.src = which.src; E.capsule.style.display = ''; }
+    else E.capsule.style.display = 'none';
+    if (E.plate) E.plate.style.display = 'none';
+    if (E.ship) E.ship.style.display = 'none';
+    if (E.heli) E.heli.style.display = 'none';
+    const v = this._ensureSeaVideo(E);
+    if (v) v.style.display = (stage === 'plasma') ? 'none' : '';
+  }
+
+  /** Video plate del mare (LTX, opzionale): creato al primo bisogno. */
+  _ensureSeaVideo(E) {
+    if (this._seaVideo !== null && this._seaVideo !== undefined) return this._seaVideo;
+    this._seaVideo = false;
+    try {
+      const v = document.createElement('video');
+      v.id = 'cine-sea';
+      v.src = 'assets/video/mare.mp4';
+      v.muted = true; v.loop = true; v.defaultMuted = true; v.playsInline = true;
+      v.style.display = 'none';
+      v.addEventListener('canplay', () => { this._seaOk = true; });
+      v.addEventListener('error', () => { this._seaOk = false; this._seaVideo = false; });
+      E.vp.insertBefore(v, E.overlay);
+      v.play().then(() => { this._seaVideo = v; }).catch(() => { this._seaVideo = false; });
+      if (this._seaVideo !== false) this._seaVideo = v;
+    } catch (err) { this._seaVideo = false; }
+    return this._seaVideo;
+  }
+
+  /** Placca a tutto schermo per lo stato di plasma (elemento SOTTO gli sprite). */
+  _plate(E, W, H, which, age, q) {
+    const im = this._plateImgs[which];
+    if (im && im.complete && im.naturalWidth) {
+      if (E.plate.dataset.which !== which) { E.plate.src = im.src; E.plate.dataset.which = which; }
+      E.plate.style.display = '';
+      E.bg.style.display = 'none';
+      const sh = 1 + 6 * q;
+      E.plate.style.transform = 'translate(' + ((Math.random() - 0.5) * sh).toFixed(1) + 'px,' +
+        ((Math.random() - 0.5) * sh).toFixed(1) + 'px) scale(' + (1.05 + 0.08 * q).toFixed(3) + ')';
+      E.plate.style.filter = 'brightness(' + (1 + 0.4 * q).toFixed(2) + ') saturate(' + (1 + 0.6 * q).toFixed(2) + ')';
+      return;
+    }
+    E.plate.style.display = 'none';
+    E.bg.style.display = '';
+    E.bg.style.backgroundImage = 'linear-gradient(180deg,#00030a 0%,#0a1430 55%,#5a2a10 82%,#1b0c06 100%)';
+    E.bg.style.transform = 'none';
+  }
+
+  /** Mare: video LTX se c'è, placca Qwen, altrimenti gradiente CSS. */
+  _seaBackdrop(E, W, H, hy, age, stage) {
+    const v = this._ensureSeaVideo(E);
+    if (v && this._seaOk) {
+      v.style.display = '';
+      E.plate.style.display = 'none';
+      E.bg.style.display = 'none';
+      return;
+    }
+    const im = this._plateImgs.ocean;
+    if (im && im.complete && im.naturalWidth) {
+      if (v) v.style.display = 'none';
+      if (E.plate.dataset.which !== 'ocean') { E.plate.src = im.src; E.plate.dataset.which = 'ocean'; }
+      E.plate.style.display = '';
+      E.bg.style.display = 'none';
+      E.plate.style.transform = 'translateY(' + (hy - H / 2).toFixed(0) + 'px) scale(1.04)';
+      E.plate.style.filter = 'brightness(1.04)';
+      return;
+    }
+    if (v) v.style.display = 'none';
+    E.plate.style.display = 'none';
+    E.bg.style.display = '';
+    const pct = ((hy / H) * 100).toFixed(0);
+    E.bg.style.backgroundImage = 'linear-gradient(180deg,#7ea9cf 0%,#f0dcb6 ' + pct + '%,#1d4a6b '
+      + (+pct + 1) + '%,#06202f 100%)';
+    E.bg.style.transform = 'none';
+  }
+
+  /** Scia di plasma: brandelli incandescenti che sfrecciano verso l'alto. */
+  _plasmaField(ctx, W, H, q, rt, rdt) {
+    const n = Math.round(10 + 46 * q);
+    while (rt.embers.length < n) rt.embers.push({
+      x: Math.random() * W, y: H * (0.3 + Math.random() * 0.8),
+      v: 260 + Math.random() * 900 * (0.4 + q), l: 0.3 + Math.random() * 0.7,
+    });
+    ctx.lineCap = 'round';
+    for (const p of rt.embers) {
+      p.y -= p.v * rdt * (0.6 + q);
+      if (p.y < -40) { p.y = H + Math.random() * 60; p.x = Math.random() * W; }
+      const a = 0.25 + 0.6 * q * p.l;
+      ctx.strokeStyle = 'rgba(255,' + (140 + Math.round(90 * p.l)) + ',60,' + a.toFixed(2) + ')';
+      ctx.lineWidth = 1 + 2.6 * p.l * q;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 3, p.y + 26 + 70 * q * p.l); ctx.stroke();
+    }
+  }
+
+  /** Blackout da plasma: neve TV + lamming, senza testo. */
+  _static(ctx, W, H, age) {
+    const a = 0.10 + 0.05 * Math.sin(age * 30);
+    for (let i = 0; i < 900; i++) {
+      const v = Math.random();
+      ctx.fillStyle = 'rgba(' + (v * 255 | 0) + ',' + (v * 255 | 0) + ',' + (v * 255 | 0) + ',' + a.toFixed(2) + ')';
+      ctx.fillRect(Math.random() * W, Math.random() * H, 3, 2);
+    }
+  }
+
+  /** Anello d'impatto sull'acqua dopo l'ammaraggio. */
+  _splashRing(ctx, cx, cy, age) {
+    for (let i = 0; i < 3; i++) {
+      const t = age - i * 0.35;
+      if (t <= 0) continue;
+      const r = 20 + t * 190, a = Math.max(0, 0.5 - t * 0.28);
+      ctx.strokeStyle = 'rgba(235,245,255,' + a.toFixed(2) + ')';
+      ctx.lineWidth = 3 - i;
+      ctx.beginPath(); ctx.ellipse(cx, cy, r, r * 0.26, 0, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(240,250,255,0.5)';
+    for (let i = 0; i < 26; i++) {
+      const t = Math.min(1, age / 1.1), a = (i / 26) * Math.PI * 2;
+      const r = 30 + t * 150;
+      ctx.fillRect(cx + Math.cos(a) * r, cy - Math.abs(Math.sin(a)) * (60 * (1 - t)) + Math.sin(a) * r * 0.2, 2.5, 2.5);
+    }
+  }
+
+  /** Scheda di fine missione disegnata sulla cinematica. */
+  _missionCard(ctx, W, H, sim, rt) {
+    const a = Math.min(1, (rt.age - 44) / 3);
+    ctx.fillStyle = 'rgba(4,10,18,' + (0.62 * a).toFixed(2) + ')';
+    ctx.fillRect(W * 0.5 - 230, H * 0.5 - 120, 460, 240);
+    ctx.strokeStyle = 'rgba(120,220,255,' + (0.7 * a).toFixed(2) + ')';
+    ctx.lineWidth = 1.4; ctx.strokeRect(W * 0.5 - 230, H * 0.5 - 120, 460, 240);
+    ctx.fillStyle = 'rgba(190,240,255,' + a.toFixed(2) + ')';
+    ctx.font = '600 26px ui-monospace, monospace'; ctx.textAlign = 'center';
+    ctx.fillText('AMMARAGGIO COMPLETATO', W / 2, H * 0.5 - 66);
+    ctx.font = '500 16px ui-monospace, monospace';
+    ctx.fillStyle = 'rgba(150,200,225,' + a.toFixed(2) + ')';
+    const righe = [
+      'G massime    ' + sim.gMax.toFixed(1) + ' g',
+      'Ingressi in atmosfera   ' + sim.atmIngressi,
+      'Durata missione   ' + (sim.t / 3600).toFixed(1) + ' h',
+      'Recupero   equipaggio in sicurezza',
+    ];
+    righe.forEach((r, i) => ctx.fillText(r, W / 2, H * 0.5 - 18 + i * 28));
+    ctx.textAlign = 'left';
+  }
+
 
   /**
    * VISTA TATTICA DI DISCESA (sotto i 25 km lunari): riquadro con profilo del
@@ -1153,7 +1405,7 @@ export class Hud {
     const ids = ['mission', 'met', 'warp', 'status', 'body', 'alt', 'vel', 'ap', 'pe', 'ecc', 'sma',
       'dv-active', 'dv-total', 'prop-pct', 'prop-bar', 'throttle-pct', 'throttle-bar', 'engine',
       'mass', 'moon-dist', 'soi', 'ticker', 'banner', 'node-info', 'help', 'dir-phase', 'dir-text',
-      'vs', 'gload', 'terrain', 'fault'];
+      'vs', 'gload', 'terrain', 'fault', 'qheat', 'chute', 'blackout'];
     for (const id of ids) this.el[id] = document.getElementById(id);
   }
 
@@ -1205,6 +1457,22 @@ export class Hud {
       const f = sim.thrustFactor < 1;
       E.fault.textContent = f ? '3/4 — FAULT' : '4/4 OK';
       E.fault.className = 'val ' + (f ? 'bad' : 'good');
+    }
+    // --- pannello RIENTRO: valori REALI (W/m², stadio paracadute, blackout) ---
+    const altER = hReal(Math.hypot(sim.ship.x, sim.ship.y) - sim.astro.earth.radius);
+    const inRet = altER > 0 && altER < 130e3;
+    if (E.qheat) {
+      const kw = sim.qHeat / 1000;
+      E.qheat.textContent = inRet && sim.qHeat > 0 ? kw.toFixed(1) + ' kW/m²' : '—';
+      E.qheat.className = 'val ' + (kw > 120 ? 'bad' : kw > 40 ? 'hl' : kw > 0 ? 'good' : '');
+    }
+    if (E.chute) {
+      E.chute.textContent = sim.chuteStage === 'main' ? 'PRINCIPALI \u00d7 4' : sim.chuteStage === 'drogue' ? 'DROGA' : '—';
+      E.chute.className = 'val ' + (sim.chuteStage ? 'good' : '');
+    }
+    if (E.blackout) {
+      E.blackout.textContent = sim.blackout ? 'BLACKOUT PLASMA' : inRet ? 'ATTIVO' : '—';
+      E.blackout.className = 'val ' + (sim.blackout ? 'bad' : inRet ? 'good' : '');
     }
 
     // predizione: esito

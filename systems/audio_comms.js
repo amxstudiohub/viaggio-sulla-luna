@@ -18,6 +18,7 @@
  */
 
 import { resolveClip, fill } from '../data/comms_lines.js';
+import { ATM } from '../core/physics.js';
 
 const WARP_LEVELS = [1, 10, 100, 1000, 2000, 5000];
 const MANIFEST_URL = 'data/comms_manifest.json';
@@ -403,6 +404,80 @@ export class AudioComms {
 
   /* ---------------- audio procedurale per-frame ---------------- */
 
+  /* ---------------- FX del RIENTRO (plasma, sparo paracadute, mare) ---------------- */
+
+  /** Bus dedicati: rombo del plasma e sciabordio. Creati al primo uso. */
+  _buildRientro() {
+    const ctx = this.ctx;
+    this.plasmaGain = ctx.createGain(); this.plasmaGain.gain.value = 0;
+    this.plasmaBp = ctx.createBiquadFilter(); this.plasmaBp.type = 'bandpass';
+    this.plasmaBp.frequency.value = 260; this.plasmaBp.Q.value = 0.6;
+    const pb = ctx.createBufferSource(); pb.buffer = this._noise(true); pb.loop = true;
+    pb.connect(this.plasmaBp); this.plasmaBp.connect(this.plasmaGain);
+    this.plasmaGain.connect(this.master); pb.start();
+    this.seaGain = ctx.createGain(); this.seaGain.gain.value = 0;
+    const slp = ctx.createBiquadFilter(); slp.type = 'lowpass'; slp.frequency.value = 380;
+    const sb = ctx.createBufferSource(); sb.buffer = this._noise(true); sb.loop = true;
+    sb.playbackRate.value = 0.55;
+    sb.connect(slp); slp.connect(this.seaGain); this.seaGain.connect(this.master); sb.start();
+    this._retStage = null; this._beacon = 0;
+  }
+
+  /** Sparo di un paracadute: colpo grave di noise + click. */
+  _pop(vol = 0.5, f = 150) {
+    if (!this.ctx) return;
+    const ctx = this.ctx, t = ctx.currentTime;
+    const src = ctx.createBufferSource(); src.buffer = this._noise(false);
+    src.playbackRate.value = 0.5;
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = f;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0008, t + 0.34);
+    src.connect(lp); lp.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.4);
+    this._tone(f * 0.6, 0.12, 0, vol * 0.25);
+  }
+
+  /** Ammaraggio: chiuffo (sweep verso il basso) + spray. */
+  _splashFx() {
+    if (!this.ctx) return;
+    const ctx = this.ctx, t = ctx.currentTime;
+    const src = ctx.createBufferSource(); src.buffer = this._noise(false);
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.8;
+    bp.frequency.setValueAtTime(2400, t); bp.frequency.exponentialRampToValueAtTime(180, t + 1.1);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.5, t + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0008, t + 1.3);
+    src.connect(bp); bp.connect(g); g.connect(this.master); src.start(t); src.stop(t + 1.4);
+  }
+
+  /** Rotore dell'elicottero di recupero: lambo grave ripetuto. */
+  _heliFx() {
+    for (let i = 0; i < 26; i++) this._tone(58 + (i % 3) * 6, 0.07, i * 0.115, 0.075);
+  }
+
+  /** Aggiorna gli FX del rientro leggendo lo stato reale della simulazione. */
+  rientroTick(sim) {
+    if (!this.ctx || this.ctx.state !== 'running') return;
+    if (!this.plasmaGain) this._buildRientro();
+    const now = this.ctx.currentTime;
+    const altE = Math.hypot(sim.ship.x, sim.ship.y) - sim.astro.earth.radius;
+    const q = Math.max(0, Math.min(1, sim.qHeat / ATM.qRef));
+    const inAtm = altE > 0 && altE < ATM.top;
+    this.plasmaGain.gain.setTargetAtTime(inAtm && q > 0 ? 0.02 + 0.26 * q : 0, now, 0.25);
+    this.plasmaBp.frequency.setTargetAtTime(200 + 1600 * q + (sim.blackout ? 900 : 0), now, 0.3);
+    const sea = sim.status === 'SPLASHDOWN';
+    this.seaGain.gain.setTargetAtTime(sea ? 0.045 : 0, now, 1.5);
+    const stage = sea ? 'splash' : sim.chuteStage === 'main' ? 'main'
+      : sim.chuteStage === 'drogue' ? 'drogue' : 'plasma';
+    if (stage !== this._retStage) {
+      this._retStage = stage;
+      if (stage === 'drogue') this._pop(0.5, 170);
+      if (stage === 'main') { this._pop(0.7, 120); this._pop(0.45, 95); }
+      if (stage === 'splash') { this._splashFx(); this._beacon = now + 2; }
+    }
+    if (sea && now > this._beacon) { this._beacon = now + 1.7; this._tone(1180, 0.08, 0, 0.045); }
+  }
+
   tick(sim, altM) {
     if (!this.ctx || this.ctx.state !== 'running' || this.lang === 'mute') return;
     const now = this.ctx.currentTime;
@@ -423,6 +498,7 @@ export class AudioComms {
     // Master Alarm bitonale sul fault
     if (sim.thrustFactor < 1 && !this._alarm) { this._alarm = true; this._alarmSeq(now); }
     if (sim.thrustFactor >= 1) this._alarm = false;
+    this.rientroTick(sim);
   }
 
   _rcs() {
