@@ -29,13 +29,20 @@ const ok = (b) => b ? 'OK' : 'FAIL';
 let fail = 0;
 const chk = (name, cond, extra = '') => { if (!cond) fail++; console.log('  [' + ok(cond) + '] ' + name + (extra ? ' — ' + extra : '')); };
 
+await wait(4000);
 console.log('== jump 8 (Splashdown) da freddo ==');
 const t0 = Date.now();
 await ev('__jump(8)');
 let st = '', cine = 'none', beat = -9, step = 0;
+const EXPR = `JSON.stringify({st:(window.__sim?__sim.status:'?'),step:(window.__step?__step():-1),cine:(window.__cockpit&&__cockpit.cine)?getComputedStyle(document.getElementById('cinematic-viewport')).display:'none',beat:(window.__cockpit&&__cockpit.cine&&__cockpit.cine.ret)?__cockpit.cine.ret.beat:-9})`;
 while (Date.now() - t0 < 360000) {
-  const j = JSON.parse(await ev('JSON.stringify({st:__sim.status,step:__step(),cine:getComputedStyle(document.getElementById("cinematic-viewport")).display,beat:(__cockpit.cine&&__cockpit.cine.ret)?__cockpit.cine.ret.beat:-9})'));
-  st = j.st; step = j.step; cine = j.cine; beat = j.beat;
+  const rawv = await ev(EXPR);
+  let j = {};
+  try { j = JSON.parse(rawv); } catch (e) { console.log('  attesa pagina: ' + String(rawv).slice(0, 60)); }
+  if (j.st) st = j.st;
+  if (typeof j.step === 'number') step = j.step;
+  if (j.cine) cine = j.cine;
+  if (typeof j.beat === 'number') beat = j.beat;
   if (st === 'SPLASHDOWN' || st === 'DONE') break;
   await wait(2000);
 }
