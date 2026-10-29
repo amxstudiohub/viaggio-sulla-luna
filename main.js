@@ -190,6 +190,8 @@ function jumpTo(i) {
   if (!autopilot.active) toggleAutopilot();
   if (!autopilot.active) return;
   jump.active = true; jump.idx = i;
+  // un salto in avanti non deve restare bloccato dalla pausa sulla superficie lunare
+  surfaceHold = false; surfaceDone = true;
   // budget di wall-clock proporzionale alla distanza: un salto dalla partenza fino
   // all'ammaraggio deve poter attraversare tutta la crociera lunare
   jump.deadline = performance.now() + 25000 + Math.max(0, i - stepIndex()) * 16000;
