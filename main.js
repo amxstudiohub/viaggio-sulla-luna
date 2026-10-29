@@ -1,5 +1,5 @@
 import { MISSIONS, ASTRO } from './data/spacecraft_specs.js';
-import { Sim, predictTrajectory, progradeUnit, moonState, hSim, vSim } from './core/physics.js';
+import { Sim, predictTrajectory, progradeUnit, moonState, hSim, vSim, ATM } from './core/physics.js';
 import { orbitalElements, TimeWarp, ManeuverNode } from './systems/planner.js';
 import { Autopilot, PHASE } from './systems/autopilot.js';
 import { AudioComms } from './systems/audio_comms.js';
@@ -46,13 +46,21 @@ function startMission(mission, opts = {}) {
   window.__jump = (i) => jumpTo(i);
 // Dev/test: teletrasporta la capsula all'interfaccia di rientro (120 km, 11,09 km/s,
 // perigeo in km REALI) per provare la cinematica terminale senza correre 39 ore.
-window.__rientro = (periKm = 57.6) => {
+window.__rientro = (periKm = 57.6, altKm = 120, fase = 'RIENTRO') => {
   const A = sim.astro, R = A.earth.radius, GM = A.earth.GM;
   sim.smJettisoned = true;
   sim.stageIndex = sim.stages.length - 1;
   const stg = sim.activeStage;
   if (stg && sim.mission.returnModule) { stg.dryMass = sim.mission.returnModule.mass; stg.propellant = 0; stg.groups = []; }
-  const r0 = R + hSim(120e3), v = vSim(11094);
+  const r0 = R + hSim(altKm * 1e3);
+  let v;
+  if (altKm <= 130) {
+    v = vSim(11094);                      // profilo calibrato: 11,09 km/s all'interfaccia
+  } else {
+    const ra = Math.max(r0, R + hSim(periKm * 1e3) * 1.02);
+    const aa = (ra + R + hSim(periKm * 1e3)) / 2;
+    v = Math.sqrt(GM * (2 / r0 - 1 / aa));   // vis-viva: da quota alta cade verso la Terra
+  }
   const a = -GM / (v * v - 2 * GM / r0);
   const ecc = 1 - (R + hSim(periKm * 1e3)) / a;
   const p = a * (1 - ecc * ecc);
@@ -61,7 +69,7 @@ window.__rientro = (periKm = 57.6) => {
   sim.ship.x = r0; sim.ship.y = 0;
   sim.ship.vx = (GM / h) * ecc * Math.sin(nu); sim.ship.vy = h / r0;
   if (!autopilot.active) toggleAutopilot();
-  autopilot.enter(PHASE.RIENTRO);
+  autopilot.enter(fase === 'CRUCIERA' ? PHASE.CRUCIERA : PHASE.RIENTRO);
   return 'EI gamma ' + (Math.atan2(sim.ship.vx, sim.ship.vy) * 180 / Math.PI).toFixed(2) + '\u00b0';
 };
   window.__jumpNext = () => jumpNext();
@@ -193,6 +201,18 @@ function jumpTo(i) {
   if (JUMPS[i].reached() || stepIndex() > i) { sim.log('Già in/superata: ' + JUMPS[i].label, 'info'); return; }
   if (!autopilot.active) toggleAutopilot();
   if (!autopilot.active) return;
+  // Chip 7/8/9: il rientro non può dipendere da una finestra TEI calcolata in tempo
+  // reale (un fast-forward la manda in mancamento). Se non siamo già in crociera di
+  // ritorno, inseriamo la traiettoria di rientro calibrata — e lo dichiariamo.
+  const giaRientro = [PHASE.CRUCIERA, PHASE.RIENTRO, PHASE.AMMARAGGIO, PHASE.DONE].includes(autopilot.phase);
+  if (i >= 6 && !giaRientro && altEarth() > ATM.top * 1.35) {
+    if (i === 6) window.__rientro(57.6, 600, 'CRUCIERA');
+    else window.__rientro(57.6, 120, 'RIENTRO');
+    sim.log('SALTO: inserita traiettoria di rientro calibrata (' +
+      (i === 6 ? 'crociera a 600 km, sgancio del modulo di servizio incluso' : 'interfaccia a 120 km') + ')', 'info');
+    hud.director('SALTO FASE', '⏭ ' + JUMPS[i].label + ': traiettoria di rientro inserita, la scena parte.');
+    return;
+  }
   jump.active = true; jump.idx = i;
   // un salto in avanti non deve restare bloccato dalla pausa sulla superficie lunare
   surfaceHold = false; surfaceDone = true;
