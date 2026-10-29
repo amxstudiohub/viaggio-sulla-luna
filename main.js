@@ -194,7 +194,7 @@ function jumpTo(i) {
   surfaceHold = false; surfaceDone = true;
   // budget di wall-clock proporzionale alla distanza: un salto dalla partenza fino
   // all'ammaraggio deve poter attraversare tutta la crociera lunare
-  jump.deadline = performance.now() + 25000 + Math.max(0, i - stepIndex()) * 16000;
+  jump.deadline = performance.now() + 25000 + Math.max(0, i - stepIndex()) * 24000;
   audio.muted = true;
   audio.stop();          // taglia la voce in onda (clip o TTS che sia)
   hud.director('SALTO FASE', '⏭ SALTO IN CORSO verso ' + JUMPS[i].label + ' — fast-forward della simulazione…');

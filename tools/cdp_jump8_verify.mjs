@@ -30,7 +30,16 @@ let fail = 0;
 const chk = (name, cond, extra = '') => { if (!cond) fail++; console.log('  [' + ok(cond) + '] ' + name + (extra ? ' — ' + extra : '')); };
 
 await wait(4000);
-console.log('== jump 8 (Splashdown) da freddo ==');
+console.log('== catena di salti fino a F11 ==');
+for (let i = 1; i <= 6; i++) {
+  await ev('__jump(' + i + ')');
+  for (let k = 0; k < 90 && (await ev('__step()')) < i; k++) {
+    if (await ev('__sim.status') === 'TOUCHDOWN') await ev('window.dispatchEvent(new KeyboardEvent("keydown", { key: " " })), "k"');
+    await wait(1000);
+  }
+}
+console.log('  step ora: ' + await ev('__step()') + ' | ' + await ev('__ap.phase'));
+console.log('== jump 8 (Splashdown) da F11 ==');
 const t0 = Date.now();
 await ev('__jump(8)');
 let st = '', cine = 'none', beat = -9, step = 0;
@@ -48,7 +57,9 @@ while (Date.now() - t0 < 360000) {
 }
 const sec = ((Date.now() - t0) / 1000).toFixed(0);
 console.log('  stato ' + st + ' | step ' + step + ' | cinema ' + cine + ' | beat ' + beat + ' | ' + sec + ' s reali');
+console.log('  warp ' + await ev('(window.__ap&&window.__ap.warp)?window.__ap.warp.current:"-"') + ' | t ' + await ev('__sim.t') + ' | quota ' + await ev('Math.round(Math.hypot(__sim.ship.x,__sim.ship.y))') + ' | log: ' + await ev('(__sim.logS||[]).slice(-2).join(" ~ ")'));
 const okf = (st === 'SPLASHDOWN' || st === 'DONE') && Number(sec) <= 360;
 console.log(okf ? 'JUMP8 OK' : 'JUMP8 FAIL');
+if (errs.length) console.log('  errori pagina (' + errs.length + '):\n   - ' + errs.slice(0, 4).join('\n   - ').slice(0, 900));
 chrome.kill();
 process.exit(okf ? 0 : 1);
