@@ -184,7 +184,11 @@ function stepIndex() {
 
 function jumpTo(i) {
   if (!sim || !autopilot || sim.status === 'CRASHED' || sim.status === 'SPLASHDOWN') return;
-  if (jump.active) { sim.log('Salto già in corso: ' + JUMPS[jump.idx].label, 'info'); return; }
+  if (jump.active) {
+    // un nuovo click ritargetta il salto: l'utente non deve mai restare chiuso fuori
+    sim.log('Salto ritargettato verso: ' + JUMPS[i].label, 'info');
+    jump.active = false;
+  }
   // «superata» = il traguardo della fase è alle spalle (stepIndex), non solo «ci sono dentro ora»
   if (JUMPS[i].reached() || stepIndex() > i) { sim.log('Già in/superata: ' + JUMPS[i].label, 'info'); return; }
   if (!autopilot.active) toggleAutopilot();
@@ -192,9 +196,12 @@ function jumpTo(i) {
   jump.active = true; jump.idx = i;
   // un salto in avanti non deve restare bloccato dalla pausa sulla superficie lunare
   surfaceHold = false; surfaceDone = true;
-  // budget di wall-clock proporzionale alla distanza: un salto dalla partenza fino
-  // all'ammaraggio deve poter attraversare tutta la crociera lunare
-  jump.deadline = performance.now() + 25000 + Math.max(0, i - stepIndex()) * 24000;
+  // Il budget non è più a tempo dalla distanza di fasi: un salto che deve far
+  // correre ore di simulazione può impiegare minuti. Si interrompe solo se la
+  // simulazione smette davvero di progredire (o dopo un cap duro anti-blocco).
+  jump.deadline = performance.now() + 480000;
+  jump.lastSimT = sim.t;
+  jump.lastProgress = performance.now();
   audio.muted = true;
   audio.stop();          // taglia la voce in onda (clip o TTS che sia)
   hud.director('SALTO FASE', '⏭ SALTO IN CORSO verso ' + JUMPS[i].label + ' — fast-forward della simulazione…');
@@ -208,16 +215,26 @@ function jumpNext() {
 /** Fast-forward sincrono: guida sim+autopilota a budget di wall-clock (come i test). */
 function driveJump() {
   const t0 = performance.now();
+  const js = (window.__jumpStats = { iters: 0, worstMs: 0 });
   while (performance.now() - t0 < 60) { // ~60% del frame: salto rapido ma UI reattiva
+    js.iters++;
+    const ti = performance.now();
     if (JUMPS[jump.idx].reached() || stepIndex() > jump.idx || sim.status === 'CRASHED' || sim.status === 'SPLASHDOWN') { endJump(); return; }
-    if (performance.now() > jump.deadline) { sim.log('SALTO interrotto: fase non raggiungibile da qui', 'warn'); endJump(); return; }
+    if (performance.now() > jump.deadline) { sim.log('SALTO interrotto: tempo massimo esaurito', 'warn'); endJump(); return; }
+    if (sim.t !== jump.lastSimT) { jump.lastSimT = sim.t; jump.lastProgress = performance.now(); }
+    else if (performance.now() - jump.lastProgress > 15000) {
+      sim.log('SALTO interrotto: la simulazione non progredisce verso ' + JUMPS[jump.idx].label, 'warn');
+      endJump(); return;
+    }
     autopilot.update();
     // fasi critiche: warp limitato per non saltare le finestre di trigger (LOI, PDIT, touchdown)
     const p = autopilot.phase;
     const crit = p === PHASE.LOI || p === PHASE.STAGE || p === PHASE.DESAT || p === PHASE.DISCESA || p === PHASE.ASCESA;
-    const w = Math.min(warp.current, crit ? 10 : 5000);
+    const w = crit ? Math.min(warp.current, 10) : Math.max(Math.min(warp.current, 5000), 10);
     const n = Math.max(1, Math.round(w / 6));
     for (let i = 0; i < n; i++) { autopilot.hold(); sim.step(DT_PHYS); if (sim.status !== 'NOMINAL') break; }
+    const cost = performance.now() - ti;
+    if (cost > js.worstMs) js.worstMs = cost;
   }
 }
 
@@ -307,12 +324,24 @@ function handleHeld(dtReal) {
 function frame(now) {
   const dtReal = Math.min(0.05, (now - lastT) / 1000);
   lastT = now;
+  window.__frames = (window.__frames || 0) + 1;
+  window.__frameMs = dtReal * 1000;
+  try {
+  frameBody(dtReal, now);
+  } catch (err) {
+    // un'eccezione non deve ammazzare il loop: il gioco si congelerebbe per sempre
+    window.__frameError = String(err && err.stack ? err.stack : err).slice(0, 400);
+    if (sim) sim.log('ERRORE FRAME: ' + String(err && err.message ? err.message : err).slice(0, 90), 'warn');
+  }
+  requestAnimationFrame(frame);
+}
+
+function frameBody(dtReal) {
 
   if (sim) {
     if (cockpit && cockpit.act0) {
       cockpit.actFrame(dtReal);
       if (cockpit.act0 && cockpit.act0.done) finishAct0();
-      requestAnimationFrame(frame);
       return;
     }
     if (surfaceHold) {
@@ -320,7 +349,9 @@ function frame(now) {
     } else if (jump.active) {
       driveJump();
     } else {
+      const _t0 = performance.now();
       if (autopilot && autopilot.active) autopilot.update();
+      const _t1 = performance.now();
       handleHeld(dtReal);
 
       // substep: tempo simulato = warp * tempo reale
@@ -339,6 +370,8 @@ function frame(now) {
         }
       }
       if (pendingNode && pendingNode.time < sim.t - 1) pendingNode = null;
+      const _p = (window.__prof = window.__prof || { upd: 0, phys: 0, rend: 0, n: 0 });
+      _p.upd += _t1 - _t0; _p.phys += performance.now() - _t1; _p.n++;
     }
     if (!surfaceHold && !surfaceDone && sim.status === 'TOUCHDOWN' &&
         (cockpit.cine.active || cockpit.forceSurface()) &&
@@ -376,10 +409,11 @@ function frame(now) {
     if (!Number.isFinite(el.r) || !Number.isFinite(el.v)) { sim.log('ANOMALIA stato nave', 'danger'); }
     const ui = { dtReal, warp: warp.current, warpLimited, node, el, accent: sim.mission.accent,
       site: autopilot && autopilot.site ? autopilot.site : null };
+    const _t3 = performance.now();
     cockpit.render(sim, el, pred, ui);
     hud.update(sim, el, pred, ui);
+    (window.__prof = window.__prof || { upd: 0, phys: 0, rend: 0, n: 0 }).rend += performance.now() - _t3;
   }
-  requestAnimationFrame(frame);
 }
 
 /* ---------------- Avvio ---------------- */
